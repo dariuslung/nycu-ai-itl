@@ -41,12 +41,20 @@ def mark_complete(tasks, title):
 def get_overdue_tasks(tasks, current_date):
     overdue = []
     for task in tasks:
-        if task["due_date"] < current_date and not task["completed"]:
+        if task["due_date"] is not None and task["due_date"] < current_date and not task["completed"]:
             overdue.append(task)
     return overdue
 
 
 def calculate_completion_rate(tasks):
+    """Calculate the completion rate of the tasks.
+
+    Args:
+        tasks (list): The list of task dictionaries.
+
+    Returns:
+        float: The proportion of completed tasks from 0.0 to 1.0, or 0.0 if tasks is empty.
+    """
     if not tasks:
         return 0.0
     completed = sum(1 for t in tasks if t["completed"])
