@@ -1,0 +1,65 @@
+Using TOOLS_V0: the PROVIDED descriptions (deliberately flawed). Your own schemas are untouched.
+
+
+===== Failure mode 1. Wrong tool =====
+
+Q: Which came first, CP1 or the Week 6 lab, and by how many days?   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: CP1 came first, by 2 days. CP1 was due Monday, October 12, and the Week 6 lab was due Wednesday, October 14 at 23:59.
+
+Q: How many days are there between the CP1 deadline and the Assignment 1 deadline?   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: There are **18 days** between the CP1 deadline (Monday, October 12) and the Assignment 1 deadline (Friday, October 30).
+
+===== Failure mode 2. Wrong parameters =====
+
+Q: What is 1,234 times 5,678?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 1,234 × 5,678 = 7,006,652
+
+Q: What is 15% of 240 plus 3 squared, all divided by 2?   (5 runs)
+   3 x calculator -> calculator
+   2 x (no tool)
+   tool errors in 3 of 5 runs
+   e.g. calculator({"expression": "((15/100) * 240 + 3^2) / 2"}) -> Error: only numbers and + - * / ** % // are allowed
+   first answer: **22.5**  15% of 240 is 36, and 3 squared is 9. Adding them gives 45, and dividing by 2 gives 22.5.
+
+Q: What is 2 to the power of 200?   (5 runs)
+   3 x calculator -> calculator -> calculator
+   1 x calculator -> calculator -> calculator -> calculator
+   1 x calculator -> calculator
+   tool errors in 5 of 5 runs
+   e.g. calculator({"expression": "2^200"}) -> Error: only numbers and + - * / ** % // are allowed
+   first answer: 2^200 = 1606938044258990275541962092341162602522202993782792835301376  This is about 1.607 × 10^60. I got it by squaring 2^100 = 1267650600228229401496703205376, since the calculator couldn't evaluate 2^200 directly.
+
+===== Failure mode 3. Tool called unnecessarily =====
+
+Q: Explain in one sentence why the sky is blue.   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The sky looks blue because sunlight contains all colors, and air molecules scatter shorter blue wavelengths much more strongly than longer red ones (Rayleigh scattering), so blue light reaches our eyes from all directions overhead.
+
+Q: What is 10 divided by 2?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: 10 divided by 2 is **5**.
+
+===== Failure mode 4. Tool not called when it should be =====
+
+Q: What is 987654 times 123456?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 987654 × 123456 = 121,931,812,224
+
+Q: Who is the code steward this week?   (5 runs)
+   5 x get_course_calendar -> search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: I can't tell you who the code steward is this week. The course knowledge base says the code steward is the designated PR reviewer for a period, and that everyone serves at least twice. It also says the rotation is recorded in DECISIONS.md, which I can't open. The course calendar doesn't list it eith...
+
+Q: What is the topic of Week 9?   (5 runs)
+   5 x get_course_calendar -> search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: I couldn't find the topic for Week 9. The course calendar has no entry for it, and a search of the knowledge base returned nothing relevant. The calendar only has dates for CP1, the Week 6 lab, the Week 7 lab, and Assignment 1.  You could check the course syllabus or ask your instructor for the Week...

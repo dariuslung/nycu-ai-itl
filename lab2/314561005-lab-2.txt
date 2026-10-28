@@ -1,0 +1,27 @@
+## Task 1
+sentence: 76 chars, 12 tokens, 6.33 chars/token
+paragraph: 1186 chars, 209 tokens, 5.67 chars/token
+mandarin: 243 chars, 319 tokens, 0.76 chars/token
+code: 629 chars, 150 tokens, 4.19 chars/token
+json_obj: 205 chars, 60 tokens, 3.42 chars/token
+
+Mandarin is surprisingly low, I thought it would take less tokens for Mandarin as I believed it to be one char per word. My expectation was that models just aren't trained enough on mandarin datasets, yet never knew the tokenizer affected Mandarin this much. Mandarin-language users are having second-class citizen treatment but it's not unexpected. I expect actual Claude/Gemini numbers to be similar, because Mandarin is just not researched enough compared to English.
+
+## Task 2
+All three used urllib.request in my case.
+Information that must govern every response belong in system prommpts, and system prompts should be as explicit as possible, especially if it needs to be a strict rule than a suggestion.
+
+## Task 3
+Prompt #32: Tell me about your favorite season
+```
+If I had to choose a favorite season, it would definitely be **Autumn** (or Fall).
+
+There's something uniquely satisfying about the transition it brings:
+
+* **Crisp Weather:** The cooling temperature is a welcome break from summer heat—perfect for wearing comfortable layers, sweaters, and light jackets.
+* **Visual Palette:** The dramatic transformation of leaves into rich shades of gold, amber, and crimson turns simple outdoor walks into visually stunning experiences.
+* **Cozy Atmosphere:** It signals a natural shift toward indoor comfort—hot drinks, warm soups, reading by a window, and gathering for seasonal holidays.
+* **A Sense of Reset:** Much like the start of a fresh school year, autumn carries a quiet, reflective atmosphere that feels like a natural time to slow down, take stock, and focus.
+```
+A neutral question.
+It never recovered for the rest of the conversation, and stayed in this first paragraph + bullet points style.

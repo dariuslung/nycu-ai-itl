@@ -1,0 +1,31 @@
+Using TOOLS_V0: the PROVIDED descriptions (deliberately flawed). Your own schemas are untouched.
+
+
+Q: What is 247 times 38?
+   TOOL CALL -> calculator({"expression": "247 * 38"})
+   RESULT <- 9386
+   ANSWER: 247 times 38 is 9,386.
+
+Q: What is covered in Week 6?
+   TOOL CALL -> get_course_calendar({"item": "Week 6"})
+   RESULT <- No date found for that item. Items with dates: cp1, week 6 lab, week 7 lab, assignment 1.
+   TOOL CALL -> search_knowledge_base({"query": "Week 6 topics and content"})
+   RESULT <- Week 6 is async and covers why prompts fail: hallucination, sycophancy, sensitivity, over-refusal and bias.
+   ANSWER: Week 6 is an asynchronous week. It covers why prompts fail, specifically:
+
+- Hallucination
+- Sycophancy
+- Sensitivity
+- Over-refusal
+- Bias
+
+The course calendar has no date for Week 6 itself, but it does list a "week 6 lab" date. I can look that up if you need it.
+
+Q: When is the Week 7 lab due?
+   TOOL CALL -> get_course_calendar({"item": "Week 7 lab due date"})
+   RESULT <- The Week 7 lab is due Wed Oct 21, 23:59.
+   ANSWER: The Week 7 lab is due Wednesday, October 21, at 23:59.
+
+Q: What is the capital of France?
+   (no tool called: the model answered directly)
+   ANSWER: The capital of France is Paris.

@@ -1,0 +1,74 @@
+Using TOOLS_V0: the PROVIDED descriptions (deliberately flawed). Your own schemas are untouched.
+
+
+===== Failure mode 1. Wrong tool =====
+
+Q: How many techniques are covered in Week 5?   (5 runs)
+   5 x get_course_calendar -> search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: Week 5 covers four techniques: zero-shot, few-shot, chain-of-thought, and self-correction.
+
+Q: What are the deliverables for CP1?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: CP1 has five deliverables:  1. Team charter 2. Problem statement with evidence 3. Interaction design sketch 4. Evaluation plan 5. Repository link  According to the same source, CP1 was due October 12.
+
+Q: When is the Week 7 lab due?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: The Week 7 lab is due Wednesday, October 21, at 23:59.
+
+===== Failure mode 2. Wrong parameters =====
+
+Q: What is twenty-four divided by eight, then multiplied by three?   (5 runs)
+   4 x calculator
+   1 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: Twenty-four divided by eight is 3, and 3 multiplied by 3 is **9**.
+
+Q: What is the square root of 144 plus 15 percent of 240?   (5 runs)
+   4 x calculator -> calculator
+   1 x (no tool)
+   tool errors in 4 of 5 runs
+   e.g. calculator({"expression": "sqrt(144) + 0.15 * 240"}) -> Error: only numbers and + - * / ** % // are allowed
+   first answer: The answer is **48**.  - √144 = 12 - 15% of 240 = 0.15 × 240 = 36 - 12 + 36 = 48
+
+Q: What is covered in Week6?   (5 runs)
+   5 x get_course_calendar -> search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: Week 6 is asynchronous and covers why prompts fail. The topics are:  - Hallucination - Sycophancy - Sensitivity - Over-refusal - Bias  The calendar doesn't list a date for "Week6" itself. It does have a "week 6 lab" entry, so I can look that up if you need its date.
+
+===== Failure mode 3. Tool called unnecessarily =====
+
+Q: What does the term 'hallucination' mean in the context of language models?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: In the context of language models, a **hallucination** is when the model generates content that is false, unsupported, or made up, yet presents it fluently and confidently as if it were accurate.  Examples include: - Inventing facts, statistics, or quotations. - Citing academic papers, books, or URL...
+
+Q: What is the capital of France?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The capital of France is Paris.
+
+Q: What is chain-of-thought prompting?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: **Chain-of-thought (CoT) prompting** is a technique for getting a large language model to work through a problem in explicit, step-by-step reasoning before giving its final answer.  Instead of asking for an answer directly, you either:  - **Few-shot CoT:** include examples in the prompt where each q...
+
+===== Failure mode 4. Tool not called when it should be =====
+
+Q: What does the code steward do?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: The code steward is the designated pull request (PR) reviewer for a set period. Everyone takes a turn, at least twice. Rotations are recorded in DECISIONS.md.
+
+Q: When is Assignment 1 due?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: Assignment 1 is due Friday, October 30.
+
+Q: What is 48273 times 9167?   (5 runs)
+   3 x calculator
+   2 x calculator -> calculator
+   tool errors in 0 of 5 runs
+   first answer: 48273 × 9167 = **442,518,591**

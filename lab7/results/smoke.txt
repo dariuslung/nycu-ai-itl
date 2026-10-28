@@ -1,0 +1,6 @@
+Using TOOLS_V0: the PROVIDED descriptions (deliberately flawed). Your own schemas are untouched.
+
+
+Q: Hello
+   (no tool called: the model answered directly)
+   ANSWER: Hello! How can I help you today? I can help with course information, course calendar dates, or calculations.

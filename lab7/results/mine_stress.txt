@@ -1,0 +1,62 @@
+
+===== Failure mode 1. Wrong tool =====
+
+Q: Which came first, CP1 or the Week 6 lab, and by how many days?   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: **CP1 came first, by 2 days.** CP1 was due Mon Oct 12, and the Week 6 lab was due Wed Oct 14 at 23:59. The calendar didn't give a time for CP1, so if it was due at a different time on Oct 12, the gap is still about two days.
+
+Q: How many days are there between the CP1 deadline and the Assignment 1 deadline?   (5 runs)
+   3 x get_course_calendar -> get_course_calendar
+   2 x get_course_calendar -> get_course_calendar -> calculator
+   tool errors in 0 of 5 runs
+   first answer: There are 18 days between the two deadlines. CP1 is due Monday, October 12, and Assignment 1 is due Friday, October 30.
+
+===== Failure mode 2. Wrong parameters =====
+
+Q: What is 1,234 times 5,678?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 1,234 × 5,678 = **7,006,652**
+
+Q: What is 15% of 240 plus 3 squared, all divided by 2?   (5 runs)
+   4 x calculator
+   1 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The result is **22.5**.  Here's the breakdown: 15% of 240 is 36, 3 squared is 9, so (36 + 9) / 2 = 22.5.
+
+Q: What is 2 to the power of 200?   (5 runs)
+   4 x calculator -> calculator
+   1 x calculator -> calculator -> calculator
+   tool errors in 5 of 5 runs
+   e.g. calculator({"expression": "2 ** 200"}) -> Error: exponent too large
+   first answer: 2^200 = 1606938044258990275541962092341162602522202993782792835301376  This is about 1.607 × 10^60. The calculator rejects exponents above 100, so I computed it as 2^100 × 2^100.
+
+===== Failure mode 3. Tool called unnecessarily =====
+
+Q: Explain in one sentence why the sky is blue.   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The sky looks blue because sunlight contains all colors, and air molecules scatter shorter (blue) wavelengths much more strongly than longer (red) ones, so blue light reaches our eyes from all directions.
+
+Q: What is 10 divided by 2?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: 10 divided by 2 is **5**.
+
+===== Failure mode 4. Tool not called when it should be =====
+
+Q: What is 987654 times 123456?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 987654 × 123456 = 121,931,812,224
+
+Q: Who is the code steward this week?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: I can't tell you who the code steward is this week. The course material says the code steward is the designated PR reviewer for a period, that everyone serves at least twice, and that rotations are recorded in DECISIONS.md. Check that file in the course repository for the current assignment.
+
+Q: What is the topic of Week 9?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: I couldn't find anything on Week 9. The course material I can access covers only Weeks 5 to 7, along with Assignment 1, CP1, and the code steward role. Your course syllabus or the course site should list the Week 9 topic.

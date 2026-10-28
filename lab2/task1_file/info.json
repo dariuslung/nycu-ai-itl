@@ -1,0 +1,14 @@
+{
+  "project": {
+    "name": "onboarding-redesign",
+    "status": "in_review",
+    "owner": {
+      "name": "Priya N.",
+      "team": "Growth Engineering"
+    },
+    "metrics": {
+      "completion_rate": 0.72,
+      "drop_off_step": "email_verification"
+    }
+  }
+}

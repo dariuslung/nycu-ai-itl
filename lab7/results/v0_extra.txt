@@ -1,0 +1,100 @@
+
+===== Mode 3, own queries (starter condition) =====
+
+Q: What is 12 plus 30?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 12 plus 30 is 42.
+
+Q: How many days are in a week?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: There are 7 days in a week.
+
+Q: Name the three primary colors.   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The three primary colors are **red, yellow, and blue**. These are traditionally used in painting and art. In light (RGB) they are red, green, and blue.
+
+===== Mode 3, Step B: predicted to break =====
+
+Q: What is 7 times 8?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 7 times 8 is 56.
+
+Q: What is 100 minus 1?   (5 runs)
+   4 x (no tool)
+   1 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 100 minus 1 is **99**.
+
+===== Mode 3, changed conditions =====
+
+Q: 法國的首都是哪裡？   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: 法國的首都是**巴黎**（Paris）。
+
+Q: I had a long day: my laptop updated, the cafeteria was out of rice, my team argued about naming a repository, and the bus was late. Anyway, unrelated to that, what is 3 plus 4?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: That sounds like a frustrating day, with the update, the missing rice, the repo naming debate, and the late bus all piling up.  3 + 4 = 7.
+
+Q: wat is the capitol of Frnace   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The capital of France is Paris.
+
+===== Mode 4, own queries (starter condition) =====
+
+Q: What is the deadline for CP1?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: CP1 was due on Monday, October 12.
+
+Q: What does the code steward do in this course?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: In this course, the code steward is the designated PR reviewer for a set period. Everyone takes a turn in the role at least twice. Rotations are recorded in DECISIONS.md.  The search didn't say what the review involves beyond that, such as whether the steward must approve PRs or only review them. Yo...
+
+Q: What is 73 times 8191?   (5 runs)
+   4 x calculator
+   1 x calculator -> calculator
+   tool errors in 1 of 5 runs
+   e.g. calculator({"expression": "73 times 8191"}) -> Error: invalid syntax (<unknown>, line 1)
+   first answer: 73 times 8191 is **597,943**.
+
+===== Mode 4, Step B: predicted to break =====
+
+Q: How many deliverables does CP1 have?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: CP1 has 5 deliverables:  1. Team charter 2. Problem statement with evidence 3. Interaction design sketch 4. Evaluation plan 5. Repository link  CP1 was due October 12.
+
+Q: Is Assignment 1 due before or after the Week 7 lab?   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: Assignment 1 is due after the Week 7 lab. Assignment 1 is due Friday, October 30, and the Week 7 lab is due Wednesday, October 21 at 23:59.
+
+===== Mode 4, changed conditions =====
+
+Q: code steward 是做什麼的？   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: Code steward 是在某段時間內被指定負責審查 PR（Pull Request）的人。每位成員至少要擔任一次，輪值安排會記錄在 `DECISIONS.md` 中。  我目前只查到這些資訊。如果你需要具體的職責細節，例如審查標準或輪值時間，可以告訴我，我再幫你查。
+
+Q: wk 6 stuff   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: The Week 6 lab was due Wednesday, October 14, at 23:59. The calendar has no entry for "week 6" in general. The other dated items are CP1, the Week 7 lab, and Assignment 1. Do you want dates for any of those, or details on something else from week 6?
+
+Q: cp 1 deadlin   (5 runs)
+   5 x get_course_calendar -> get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: CP1 was due Monday, October 12.
+
+Q: I had a long day: my laptop updated, the cafeteria was out of rice, my team argued about naming a repository, and the bus was late. Anyway, unrelated to that, when is assignment 1 due?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: Sorry you had such a rough day. Assignment 1 is due Friday, October 30.

@@ -1,0 +1,68 @@
+
+===== Failure mode 1. Wrong tool =====
+
+Q: How many techniques are covered in Week 5?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: Week 5 covers **four** prompt engineering techniques: zero-shot, few-shot, chain-of-thought, and self-correction.
+
+Q: What are the deliverables for CP1?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: CP1 has five deliverables:  1. Team charter 2. Problem statement with evidence 3. Interaction design sketch 4. Evaluation plan 5. Repository link
+
+Q: When is the Week 7 lab due?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: The Week 7 lab is due Wednesday, October 21, at 23:59.
+
+===== Failure mode 2. Wrong parameters =====
+
+Q: What is twenty-four divided by eight, then multiplied by three?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: Twenty-four divided by eight is 3, and 3 multiplied by 3 is **9**.
+
+Q: What is the square root of 144 plus 15 percent of 240?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The answer is **48**. The square root of 144 is 12, and 15% of 240 is 36, so 12 + 36 = 48.
+
+Q: What is covered in Week6?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: Week 6 is an asynchronous week. It covers why prompts fail, specifically:  - Hallucination - Sycophancy - Sensitivity - Over-refusal - Bias
+
+===== Failure mode 3. Tool called unnecessarily =====
+
+Q: What does the term 'hallucination' mean in the context of language models?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: In the context of language models, a **hallucination** is output that is fluent and confident but false, unsupported, or made up. The model presents invented facts, citations, quotes, names, or events as if they were real.  Hallucinations happen because language models generate text by predicting li...
+
+Q: What is the capital of France?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: The capital of France is Paris.
+
+Q: What is chain-of-thought prompting?   (5 runs)
+   5 x (no tool)
+   tool errors in 0 of 5 runs
+   first answer: Chain-of-thought (CoT) prompting is a technique for getting a language model to work through a problem in explicit, step-by-step reasoning before giving its final answer.  Instead of asking for the answer directly, the prompt either: - **Includes worked examples** that show intermediate reasoning st...
+
+===== Failure mode 4. Tool not called when it should be =====
+
+Q: What does the code steward do?   (5 runs)
+   5 x search_knowledge_base
+   tool errors in 0 of 5 runs
+   first answer: The code steward is the designated PR reviewer for a given period. Everyone in the course serves in this role at least twice, and the rotations are recorded in DECISIONS.md.
+
+Q: When is Assignment 1 due?   (5 runs)
+   5 x get_course_calendar
+   tool errors in 0 of 5 runs
+   first answer: Assignment 1 is due on Friday, October 30.
+
+Q: What is 48273 times 9167?   (5 runs)
+   5 x calculator
+   tool errors in 0 of 5 runs
+   first answer: 48273 × 9167 = 442,518,591

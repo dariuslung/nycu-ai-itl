@@ -1,0 +1,4 @@
+- What I asked the model to do — "Explain this function".
+- What it produced — algorithm name + step-by-step breakdown + example walkthrough + key characteristics i.e. time and space complexity.
+- What I decided to change and why — Imagine trying to understand as a newbie, I added <original prompt> + "like I'm 5".
+- What this tells me about the gap between intent and output — It naturally assumes I am fluent in software engineering.
