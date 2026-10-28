@@ -209,11 +209,44 @@ Because Python evaluates logical `and` from left to right with short-circuiting,
 Write a function `sort_tasks_by_priority(tasks)` for this module. It returns a new list (the input list must not be modified) sorted so that higher-priority tasks come first ("high", then "medium", then "low"). Within the same priority, tasks with earlier due dates come first, and tasks with no due date (None) come last within their priority tier.
 ```
 
+Response:
+
+````
+```python
+def sort_tasks_by_priority(tasks):
+    """Return a new list of tasks sorted by priority and due date.
+
+    Priority order: "high" > "medium" > "low".
+    Within the same priority tier, tasks with earlier due dates come first,
+    and tasks with no due date (None) come last.
+
+    Args:
+        tasks (list): A list of task dictionaries.
+
+    Returns:
+        list: A new sorted list of tasks.
+    """
+    priority_order = {"high": 0, "medium": 1, "low": 2}
+
+    def sort_key(task):
+        p_rank = priority_order.get(task.get("priority", "medium"), 3)
+        due = task.get("due_date")
+        # due is None -> (1, None); due has date -> (0, due_date)
+        # This guarantees dates are compared to dates and None values sort last.
+        has_no_due_date = 1 if due is None else 0
+        return (p_rank, has_no_due_date, due)
+
+    return sorted(tasks, key=sort_key)
+
+```
+````
+
 ### Task 2 — Self-correction (one conversation, three turns)
 
 Turn 1: send the Zero-shot prompt above (identical).
 
 Response:
+
 ````
 ```python
 from datetime import date, datetime
@@ -266,6 +299,7 @@ Review your code critically against the spec. Check specifically: (1) does it cr
 ```
 
 Response:
+
 ````
 ### 1. Does it crash or misorder when `due_date` is `None`?
 
@@ -318,6 +352,7 @@ Now revise the function to fix every problem you listed, and show the final comp
 ```
 
 Response:
+
 ````
 Here is the revised, robust implementation. It explicitly enforces the specified priority values (`"high"`, `"medium"`, `"low"`), rejects invalid or missing priorities with a clear `ValueError`, and maintains all tie-breaking and immutability guarantees.
 
@@ -405,6 +440,7 @@ Following the same style and sections, write the docstring for `calculate_comple
 ```
 
 Response:
+
 ````
 """Calculate the percentage of completed tasks in the task list.
 
@@ -481,6 +517,101 @@ If you submit the rerun, keep the first attempt too and say in the reflection th
 
 Do NOT paste CONVENTIONS.md or utils.py in the original runs.
 
+Response 1:   
+
+````
+```python
+def add_subtask(tasks, parent_title, subtask_title):
+    """Add a subtask to an existing task by parent title.
+
+    Args:
+        tasks (list): The list of task dictionaries.
+        parent_title (str): The title of the parent task.
+        subtask_title (str): The title of the subtask to add.
+
+    Returns:
+        bool: True if the parent task was found and the subtask added, False otherwise.
+    """
+    for task in tasks:
+        if task["title"] == parent_title:
+            if "subtasks" not in task:
+                task["subtasks"] = []
+            task["subtasks"].append({
+                "title": subtask_title,
+                "completed": False,
+            })
+            return True
+    return False
+
+```
+````
+
+Response 2:
+
+````
+```python
+from utils import format_due_date  # adjust function name to match your utils.py (e.g., format_date)
+
+def format_task_line(task, today):
+    """Return a one-line display string showing a task's title, priority, and due date.
+
+    Args:
+        task (dict): Task dictionary containing 'title', 'priority', and 'due_date'.
+        today (date): The current date used for relative date formatting.
+
+    Returns:
+        str: Formatted one-line summary for the task.
+    """
+    title = task.get("title", "")
+    priority = task.get("priority", "medium").upper()
+    due_date = task.get("due_date")
+
+    due_str = format_due_date(due_date, today) if due_date else "No due date"
+
+    return f"[{priority}] {title} (Due: {due_str})"
+
+```
+
+*(Note: Update `format_due_date` and the exact output format to match whatever signature and convention are defined inside your `utils.py`.)*
+````
+
+Response 3:
+
+````
+```python
+def get_urgent_tasks(tasks, today):
+    """Return incomplete tasks due on or before today, sorted most urgent first.
+
+    Urgency is determined first by earliest due date, then by priority level
+    ('high' > 'medium' > 'low').
+
+    Args:
+        tasks (list): List of task dictionaries.
+        today (date): The reference date to evaluate urgency against.
+
+    Returns:
+        list: Filtered and sorted list of urgent task dictionaries.
+    """
+    priority_order = {"high": 0, "medium": 1, "low": 2}
+
+    urgent = [
+        t for t in tasks
+        if not t.get("completed", False)
+        and t.get("due_date") is not None
+        and t["due_date"] <= today
+    ]
+
+    return sorted(
+        urgent,
+        key=lambda t: (
+            t["due_date"],
+            priority_order.get(t.get("priority", "medium"), 3),
+        ),
+    )
+
+```
+````
+
 ## Part 2 — rewrite skeletons (finish AFTER you see the original outputs)
 
 **P1:** paste the full CONVENTIONS.md, then: "Write `add_subtask(tasks, parent_title, subtask_title)` following every rule in the conventions above." (Adjust to the specific rules your original violated.)
@@ -488,3 +619,129 @@ Do NOT paste CONVENTIONS.md or utils.py in the original runs.
 **P2:** paste the full `utils.py`, then: "Write `format_task_line(task, today)` returning a one-line string with the title, priority and due date. Build the due-date text by calling `due_label(task["due_date"], today)` imported from `utils`; do not reimplement it." (Adjust to what your original did.)
 
 **P3:** "Write `get_urgent_tasks(tasks, today)`. A task is urgent if it is not completed and at least one holds: it is overdue (due before today); it is due within the next 3 days counting today (today through today+3); or its priority is "high" (even with no due date). Return them earliest due date first, undated high-priority tasks last. Do not modify the input list." (Adjust to what your original got wrong; check the 3-day boundary against your output.)
+
+Response 1:
+
+````
+```python
+class TaskError(Exception):
+    """Exception raised for errors in task management operations."""
+    pass
+
+
+def add_subtask(tasks, parent_title, subtask_title):
+    """Add a subtask to an existing parent task.
+
+    Args:
+        tasks (list): The list of existing task dictionaries.
+        parent_title (str): The title of the parent task to attach the subtask to.
+        subtask_title (str): The title of the new subtask.
+
+    Returns:
+        list: The updated list of tasks.
+
+    Raises:
+        TaskError: If no parent task matching `parent_title` is found.
+    """
+    normalized_parent = parent_title.strip().casefold()
+    target_task = None
+
+    for task in tasks:
+        if task.get("title", "").strip().casefold() == normalized_parent:
+            target_task = task
+            break
+
+    if target_task is None:
+        raise TaskError(f"Task with title '{parent_title}' not found.")
+
+    if "subtasks" not in target_task:
+        target_task["subtasks"] = []
+
+    target_task["subtasks"].append({
+        "title": subtask_title,
+        "due_date": None,
+        "priority": target_task.get("priority", "medium"),
+        "completed": False,
+    })
+
+    return tasks
+
+```
+````
+
+Response 2:
+
+````
+```python
+from utils import due_label
+
+
+def format_task_line(task, today):
+    """Format a task dictionary into a single-line summary string.
+
+    Args:
+        task (dict): A dictionary containing at least 'title', 'priority',
+            and 'due_date'.
+        today (date): The current date used to compute relative due date text.
+
+    Returns:
+        str: Formatted string containing title, priority, and relative due date.
+    """
+    due_text = due_label(task.get("due_date"), today)
+    return f"{task['title']} [{task['priority']}] - {due_text}"
+
+```
+````
+
+Response 3:
+
+````
+```python
+from datetime import timedelta
+
+def get_urgent_tasks(tasks, today):
+    """Return urgent, non-completed tasks sorted by due date.
+    
+    A task is considered urgent if:
+    - It is not completed, AND
+    - At least one of the following holds:
+        1. It is overdue (due_date < today)
+        2. It is due within the next 3 days counting today (today <= due_date <= today + 3 days)
+        3. Its priority is "high" (regardless of due date)
+
+    Sorting order:
+    - Earliest due date first.
+    - Tasks without a due date (high priority) appear last.
+    
+    Args:
+        tasks (list[dict]): The list of task dictionaries.
+        today (date): The reference date.
+
+    Returns:
+        list[dict]: A new list containing urgent tasks sorted appropriately.
+    """
+    urgent_window_end = today + timedelta(days=3)
+    urgent_tasks = []
+
+    for task in tasks:
+        if task.get("completed"):
+            continue
+
+        due = task.get("due_date")
+        priority = task.get("priority")
+
+        is_overdue = due is not None and due < today
+        is_due_soon = due is not None and today <= due <= urgent_window_end
+        is_high_priority = priority == "high"
+
+        if is_overdue or is_due_soon or is_high_priority:
+            urgent_tasks.append(task)
+
+    # Sort key places dated tasks first (sorted by date), and undated tasks at the end
+    return sorted(
+        urgent_tasks,
+        key=lambda t: (t.get("due_date") is None, t.get("due_date"))
+    )
+
+```
+````
