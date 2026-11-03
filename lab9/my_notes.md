@@ -1,5 +1,8 @@
 # Week 9 notes (draft predictions: edit in your own words before running anything)
 
+Header: Name 龍偉亮 | Student ID 314561005 | Team 17 | Model claude-haiku-5-5 (default LAB_MODEL) | Date 2026-11-03
+
+
 ## Part 1 predictions (written before any `ask` run)
 | # | Will the model know without retrieval? Why |
 |---|---|
@@ -11,9 +14,9 @@
 ## Part 2 Step 1 prediction (types)
 NOTE: the smoke-test `eval` (bm25, fixed:200:0, k=3) was already run and showed hit@3 = 0.89 with MISSes on Q14 and Q20, so
 this prediction is not fully blind. Disclose that in the PDF if you keep it.
-- BM25 hardest: **paraphrase** (question words differ from the document: "react" vs "acknowledge") and **multi-chunk / multi-hop**
+- BM25 hardest: Probably **paraphrase** (question words differ from the document: "react" vs "acknowledge") and **multi-chunk / multi-hop**
   (evidence spread over places, and k=3 may not cover all of it).
-- Dense better at: paraphrase. Dense worse at: **exact term** (acronyms/commands like CRB, `nimbusctl rollback`) and
+- Dense better at: paraphrase. Dense worse at **exact term** (acronyms/commands like CRB, `nimbusctl rollback`) and
   **number confusion** (many chunks mention "30 days"; embeddings blur numbers).
 
 ## Part 1 results (model claude-haiku-5-5, bm25 fixed:200:0 k=3, --prompt v0)
@@ -115,6 +118,12 @@ Predictions for my own break-it questions (written BEFORE running):
 No question failed with either prompt (21/21 both), so the "did not fail" report applies. The only wrong-ish result is B1 (a retrieval miss on a Chinese query).
 
 ### Reflection (draft)
-v0 held up because the model is strong, the corpus is tiny (3 chunks of ~20 docs), and the old D06 literally says "superseded" in its text, so the model needs no metadata to resolve the conflict. In a real project with
-many near-duplicate versions that don't self-label, a user-editable corpus (the D16 note shows an injection is easy to plant) or a weaker model, v0 could pick stale or follow injected text. I would log the retrieved chunk ids, doc status/date and
-the answer per query, and keep a fixed regression set (conflict, unanswerable, injection, non-English) run on every prompt/model/corpus change with --repeat. "It passed today" is one sample from a stochastic model on 21 questions; it says nothing about new documents or other models.
+v0 held up because the model is strong, the corpus is tiny (3 chunks of ~20 docs), and the old D06 literally says "superseded" in its text, so the model doesn't need metadata to resolve the conflict. In a real project with many near-duplicate versions that don't self-label, a user-editable corpus (the D16 note shows an injection is easy to plant) or a weaker model, v0 could pick stale or follow injected text. I would log the retrieved chunk ids, doc status/date and the answer per query, and keep a fixed regression set (conflict, unanswerable, injection, non-English) run on every prompt/model/corpus change with --repeat. "It passed today" is one sample from a stochastic model on 21 questions; it may or may not hold up for new documents or other models.
+
+## Part 4 (DRAFT, based on the team docs in nycu-ai-itl/docs/cp1; edit into your own words)
+### Question 1
+Our project is a tool for a shared wet lab that helps researchers find a labmate's protocol changes and troubleshooting history without asking the person who did the experiment. Its knowledge base would be the lab's records from Benchling, Google Drive and the NAS, plus saved troubleshooting discussions, with owner and project metadata. I would use RAG: the records span several tools, include files and images, and change every week, so they cannot be pasted into every prompt like the 20 handbook documents could (and D2-2 requires updates when a file changes). From the lab I would start with dense retrieval (it handled paraphrases such as "money back" vs "refund") with heading-based chunks of about 250 words and k=3, and keep owner, date and status in the prompt so answers trace to a person and a file. Because a wrong concentration or temperature matters, I would first test hit@k on real lab questions.
+
+### Question 2
+Anyone in the lab with access to Benchling, Drive or the NAS can write what the tool will index (maybe), and our own design leaves permission management as an open issue. If a record were wrong, outdated or contained an instruction aimed at the AI, the tool could give a researcher a wrong parameter or leak or follow text they never wrote, and unpublished or patentable data must not leave the lab (Participant A).
+Two controls: (1) restrict and review what is indexed (only lab-owned sources, owners are notified of new or changed items, and a protocol marked superseded or with a date so old versions do not win); (2) treat retrieved text as data, not instructions in the prompt, and always show the source document and owner with every answer so the researcher checks it before acting, plus test with known-bad documents like D06 and D16.
