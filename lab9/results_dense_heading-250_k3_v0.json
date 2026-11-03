@@ -1,0 +1,275 @@
+[
+  {
+    "id": "Q01",
+    "question": "Which port does the search service listen on?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D02#0",
+      "D12#0",
+      "D04#0"
+    ],
+    "answer": "The search-service listens on port 7700."
+  },
+  {
+    "id": "Q02",
+    "question": "How long is an access token valid?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D08#0",
+      "D07#0",
+      "D06#0"
+    ],
+    "answer": "An access token is valid for **15 minutes**."
+  },
+  {
+    "id": "Q03",
+    "question": "How fast does the engineer on call have to react when the whole service is down?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D09#0",
+      "D10#0",
+      "D12#0"
+    ],
+    "answer": "The on-call engineer must acknowledge the page within **5 minutes**. A complete outage is SEV1, and the policy requires acknowledgment within 5 minutes for that severity. If the primary doesn't acknowledge within 5 minutes, the paging system automatically alerts the secondary engineer. If neither responds, the on-call lead is called."
+  },
+  {
+    "id": "Q04",
+    "question": "What does CRB stand for?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D20#0",
+      "D02#0",
+      "D16#0"
+    ],
+    "answer": "CRB stands for **Change Review Board**. It meets on Thursdays to review database schema migrations and vendor changes."
+  },
+  {
+    "id": "Q05",
+    "question": "How many approvals does a change to the billing code need?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D06#0",
+      "D05#0",
+      "D18#0"
+    ],
+    "answer": "A change to billing code needs **two approvals**, and one of them must come from a member of the code steward rotation. Nobody may merge their own pull request.\n\nThe context also includes an older document marked as historical, which requires only one approval for /billing. I've used the newer policy, which sets the two-approval rule."
+  },
+  {
+    "id": "Q06",
+    "question": "What is the maximum size of a pull request?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D06#0",
+      "D05#0",
+      "D07#0"
+    ],
+    "answer": "The maximum size is **400 lines** of changes. Generated files and lockfiles don't count toward this limit. The context also includes an older version of the policy that allowed 800 lines, but the newer version replaces it. The document header also says it was superseded by a Code Review Policy dated 2026-04-01, which isn't included here, so check that document for the current rule."
+  },
+  {
+    "id": "Q07",
+    "question": "What caused the March 2026 sync outage, and how long did it last?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D11#0",
+      "D19#0",
+      "D14#0"
+    ],
+    "answer": "The March 2026 sync outage was caused by an **expired TLS certificate on the sync-service**. The certificate renewal job had been turned off during an earlier NATS migration and was never turned back on. Mobile and desktop clients could not sync notes, though offline reading and editing still worked and no data was lost.\n\nThe outage lasted **47 minutes**, from the first customer report at 02:13 to the incident closing at 03:00 (Asia/Taipei) on Saturday, 2026-03-14."
+  },
+  {
+    "id": "Q08",
+    "question": "What was the sync batch size before version 4.3.0?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D14#0",
+      "D06#0",
+      "D19#0"
+    ],
+    "answer": "The sync batch size before v4.3.0 was **50 changes per request**. Version 4.3.0 raised it to 200."
+  },
+  {
+    "id": "Q09",
+    "question": "Which ADR replaced RabbitMQ, and when was it accepted?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D04#0",
+      "D20#0",
+      "D06#0"
+    ],
+    "answer": "**ADR-007** replaced RabbitMQ with NATS. It was accepted on **2025-06-02** and superseded ADR-003, the record that had introduced RabbitMQ."
+  },
+  {
+    "id": "Q10",
+    "question": "What uptime SLA do Team plan customers get?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "declined, as it should",
+    "retrieved": [
+      "D19#0",
+      "D01#1",
+      "D18#0"
+    ],
+    "answer": "The context doesn't say. It lists the Team plan's price (US$9 per user per month), 100 GB of storage per user, admin controls, usage reports, and a shared billing portal, but it doesn't mention an uptime SLA for any plan. You would need to check the official pricing or contract terms, or ask the support lead."
+  },
+  {
+    "id": "Q11",
+    "question": "Who is the primary on-call engineer this week?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "declined, as it should",
+    "retrieved": [
+      "D10#0",
+      "D01#1",
+      "D09#0"
+    ],
+    "answer": "The context doesn't say who the primary on-call engineer is this week. It describes how the rotation works, but it names no one. The on-call calendar should show the current primary. The outgoing primary's handoff note and the incoming primary's review of it are also useful sources. The rotation changes every Monday at 10:00 Asia/Taipei."
+  },
+  {
+    "id": "Q12",
+    "question": "Which vendors handle our email delivery and our card payments?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D16#0",
+      "D18#0",
+      "D19#0"
+    ],
+    "answer": "Email delivery is handled by **Mailwren**, which sends transactional messages such as sign-in links and receipts. The platform team owns this vendor relationship.\n\nCard payments are processed by **Payfold**, which stores card details so Nimbus Notes never sees them. The billing team owns this relationship."
+  },
+  {
+    "id": "Q13",
+    "question": "Within how many days must new engineers finish the security awareness training?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D01#1",
+      "D01#0",
+      "D15#0"
+    ],
+    "answer": "New engineers must complete the mandatory security awareness training within **14 days** of their start date. Automatic reminders are sent on day 7 and day 12."
+  },
+  {
+    "id": "Q14",
+    "question": "If a customer changes their mind after buying, how long do they have to get their money back?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D19#0",
+      "D17#0",
+      "D06#0"
+    ],
+    "answer": "Customers can request a refund within **14 days of purchase**. After 14 days, only annual plans are refunded, and only in exceptional cases. The support lead makes that decision. Refunds go back to the original payment method."
+  },
+  {
+    "id": "Q15",
+    "question": "What is the command to roll back a release?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D13#0",
+      "D19#0",
+      "D06#0"
+    ],
+    "answer": "The command is:\n\n```\nnimbusctl rollback --to <version>\n```\n\nReplace `<version>` with the version you want to return to. For backend services, a rollback takes about 3 minutes. Mobile clients cannot be rolled back, so mobile releases rely on a staged rollout in the app stores instead."
+  },
+  {
+    "id": "Q16",
+    "question": "Which service had the certificate problem in March 2026, and which port does that service use?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D11#0",
+      "D11#1",
+      "D02#0"
+    ],
+    "answer": "The certificate problem was on the **sync-service**, which listens on **port 9100**. The root cause section says its TLS certificate expired, and the renewal job had been switched off during the NATS migration."
+  },
+  {
+    "id": "Q17",
+    "question": "How long are deleted notes kept in the trash before they are removed permanently?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D17#0",
+      "D15#0",
+      "D14#0"
+    ],
+    "answer": "According to the policy, a deleted note stays in the trash for **30 days**. After that, it is removed permanently from the primary database. Backups that still contain the note are kept for a further 35 days, so the data is gone from backups at most 35 days after it leaves the trash."
+  },
+  {
+    "id": "Q18",
+    "question": "How long did the June 2026 search latency incident last?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D12#0",
+      "D11#0",
+      "D09#0"
+    ],
+    "answer": "The June 2026 search latency incident lasted **2 hours 10 minutes**."
+  },
+  {
+    "id": "Q19",
+    "question": "How must AI-assisted code be marked in a pull request?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D05#0",
+      "D06#0",
+      "D16#0"
+    ],
+    "answer": "AI-assisted code must be labelled. Add the tag **AI-assisted** to the pull request description, and state which parts of the change the assistant produced. Reviewers still review that code with the same care as any other code, and they run the tests locally when the change is not trivial."
+  },
+  {
+    "id": "Q20",
+    "question": "How soon after a new hire signs the offer does their computer get sent out?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D01#0",
+      "D01#1",
+      "D06#0"
+    ],
+    "answer": "Your laptop is shipped within 2 business days of your signed offer."
+  },
+  {
+    "id": "Q21",
+    "question": "What should an API client do when the server rejects it for making too many calls?",
+    "passes": 3,
+    "runs": 3,
+    "reason": "ok",
+    "retrieved": [
+      "D07#0",
+      "D06#0",
+      "D05#0"
+    ],
+    "answer": "When the server rejects a request for exceeding the rate limit (each API key is allowed 600 requests per minute), it responds with HTTP status **429**. The client should:\n\n1. **Read the `Retry-After` header**, which gives the number of seconds to wait.\n2. **Back off for that long** before sending another request.\n3. **Retry only after the delay**, not immediately and not in a tight loop."
+  }
+]
