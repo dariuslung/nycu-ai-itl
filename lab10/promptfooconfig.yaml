@@ -1,0 +1,39 @@
+# promptfooconfig.yaml: PromptFoo setup for the Week 10 lab (the real model).
+#
+# Run it with:   npx promptfoo@latest eval --no-cache
+# Then view it:  npx promptfoo@latest view
+# Your API key goes in the ANTHROPIC_API_KEY environment variable. Never write it in this file.
+
+description: "Week 10 lab: Nimbus Notes ticket triage"
+
+prompts:
+  - id: file://prompts/triage_v0.txt
+    label: v0 (provided)
+  # PART 3: after you edit prompts/triage_mine.txt, remove the # from the next two lines to compare it with v0.
+  - id: file://prompts/triage_mine.txt
+    label: mine
+  # OPTIONAL (Part 3, step 5): a neutral rewording of v0, as a CONTROL for your fix. Remove the # from the next two lines.
+  # - id: file://prompts/triage_v0_reworded.txt
+  #   label: v0 reworded
+
+providers:
+  - id: anthropic:messages:claude-haiku-5-5
+    label: haiku
+    config:
+      # PromptFoo's default temperature for this provider is 0. A real app usually does not run at 0,
+      # and at 0 the repeats of a test look alike. We use 1 so that --repeat shows you the variation.
+      # If the API rejects the temperature setting for this model, delete the line and tell a TA.
+      temperature: 1
+      max_tokens: 300
+
+  # OPTIONAL (Part 3, step 6): run your final prompt ONCE on a stronger model.
+  # To do it: put a # in front of every line of the haiku provider above, remove the # from the lines below,
+  # run once, then switch back. (If both are active, every test runs on both models and the cost doubles.)
+  # It costs more per call than Haiku and the class shares a budget: ONCE, not in a loop.
+  # - id: anthropic:messages:claude-sonnet-5-5
+  #   label: sonnet
+  #   config:
+  #     temperature: 1
+  #     max_tokens: 300
+
+tests: file://tests.yaml

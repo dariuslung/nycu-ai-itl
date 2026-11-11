@@ -1,0 +1,21 @@
+Hello Nimbus team,
+
+I hope you are all doing well. I wanted to write a longer note than usual because I have been meaning to give you some feedback for a while, and I am only getting around to it now. Please bear with me, because there is some background first.
+
+Our company is a small architecture practice with eleven people. We started using Nimbus Notes about two years ago when our previous tool, which I will not name, was shut down by its vendor with only a month of warning. At the time we were nervous, because we had years of site visit notes, meeting minutes and material specifications scattered across three different systems. The move turned out to be much easier than expected. Our office manager, Helen, did most of the migration herself over a long weekend, and she still talks about how pleasant it was compared with the migration before it.
+
+Since then the whole practice has settled into a routine. Every project gets a folder, every site visit gets a note, and every note gets tagged with the client and the phase of the work. The search is genuinely good. Last month one of our senior architects, Marcus, found a note from fourteen months earlier in about five seconds, which saved us from repeating a structural survey. The shared folders work well for our consultants, and the permissions are clear enough that I have not had to explain them more than once.
+
+I should also say that we love the mobile app when we are on site. Taking photos and attaching them to a note while standing in a half-built stairwell is exactly what we needed. The offline mode has saved us several times in basements and lift shafts where there is no signal. A few of the younger members of the team have started dictating their notes, and the results are better than I expected. We have also recommended Nimbus to two of our consultants, one of whom has already switched, so you might see their sign-up in your records.
+
+There have been a few small annoyances over the years, none of them serious. The tag list gets long and could use a better way to merge duplicates. The print layout for notes with large tables is a little cramped. Once or twice the sync indicator showed a spinner for longer than I would like, although it always resolved itself. I mention these only for completeness, because overall we are very happy, and I would not want you to read this message as a complaint about the product as a whole.
+
+Our practice has also been growing. We hired three people this year, and we are planning to take on a fourth in the spring, which is partly why I am writing now. We moved to the Team plan in January so that everyone could have shared folders and the longer version history. Helen handles our accounts and pays the invoices, and I normally never look at them. This week, though, while she was away on leave, I opened the billing page to check something else and noticed something that looked wrong.
+
+Looking at the invoice dated 3 November, number 4471, our Team plan appears twice, with the same amount and the same date, and our card statement shows two matching charges as well. We only have one subscription, so I believe we have been charged twice for this month. Could you please check this and refund the duplicate charge? There is no rush, and the app works perfectly well, but I would like to have it corrected before Helen returns so that she does not have to deal with it.
+
+Thank you very much for a product that has made our work easier, and for your help with this.
+
+Kind regards,
+Daniel Okafor
+Okafor and Lindqvist Architects

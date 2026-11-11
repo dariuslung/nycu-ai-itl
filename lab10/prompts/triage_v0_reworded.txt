@@ -1,0 +1,8 @@
+Below is a support ticket from a customer of Nimbus Notes, a note-taking app.
+
+Ticket: {{ticket}}
+
+Please classify the ticket. Answer with JSON only, containing the category, the priority and a short summary.
+
+Categories: billing, bug, feature request, account access, other
+Priorities: low, normal, high, urgent

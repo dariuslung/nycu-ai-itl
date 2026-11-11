@@ -1,0 +1,23 @@
+# promptfooconfig.practice.yaml: the same lab, but with a SCRIPTED STAND-IN instead of a real model.
+# For practice or if your API key does not work yet. No key and no cost. See practice_provider.js.
+#
+# Run it with:   npx promptfoo@latest eval -c promptfooconfig.practice.yaml --no-cache
+#
+# The stand-in is not a real model. Do your lab report on the real model (promptfooconfig.yaml) if you can.
+
+description: "Week 10 lab (practice stand-in): Nimbus Notes ticket triage"
+
+prompts:
+  - id: file://prompts/triage_v0.txt
+    label: v0 (provided)
+  # PART 3: remove the # from the next two lines to compare your edited prompt with v0.
+  # - id: file://prompts/triage_mine.txt
+  #   label: mine
+  # The optional "reworded prompt" control (triage_v0_reworded.txt) is NOT informative with the stand-in:
+  # it follows fixed rules, so a rewording tells you nothing about a real model. Skip that step here.
+
+providers:
+  - id: file://practice_provider.js
+    label: practice stand-in
+
+tests: file://tests.yaml

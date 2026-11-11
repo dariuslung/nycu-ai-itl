@@ -1,0 +1,798 @@
+{
+  "evalId": "eval-4ll-2026-11-11T09:12:41",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-11-11T09:12:41.194Z",
+    "prompts": [
+      {
+        "raw": "You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: {{ticket}}",
+        "label": "v0 (provided): prompts/triage_v0.txt: You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: {{ticket}}",
+        "id": "e0abd95becc302fe278428bd26cf3b14a033e6f95d1042b1e6cec3a7b480c368",
+        "provider": "haiku",
+        "metrics": {
+          "score": 1.8333333333333333,
+          "testPassCount": 0,
+          "testFailCount": 3,
+          "testErrorCount": 0,
+          "testCacheHitCount": 0,
+          "assertPassCount": 6,
+          "assertFailCount": 4,
+          "totalLatencyMs": 3243,
+          "tokenUsage": {
+            "prompt": 422,
+            "completion": 198,
+            "cached": 0,
+            "total": 620,
+            "numRequests": 3,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {
+            "Format": 3,
+            "Schema": 0,
+            "Correctness": 3
+          },
+          "namedScoresCount": {
+            "Format": 3,
+            "Schema": 3,
+            "Correctness": 4
+          },
+          "namedScoreWeights": {
+            "Format": 3,
+            "Schema": 3,
+            "Correctness": 4
+          },
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "error": "priority \"high\" is not an allowed label",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.6666666666666666,
+          "reason": "priority \"high\" is not an allowed label",
+          "namedScores": {
+            "Format": 1,
+            "Schema": 0,
+            "Correctness": 1
+          },
+          "namedScoreWeights": {
+            "Format": 1,
+            "Schema": 1,
+            "Correctness": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "The reply is a bare JSON object",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:validJson",
+                "metric": "Format"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "priority \"high\" is not an allowed label",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:schemaOk",
+                "metric": "Schema"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "category is \"billing\", expected \"billing\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:categoryIs",
+                "config": {
+                  "expected": "billing"
+                },
+                "metric": "Correctness"
+              }
+            }
+          ]
+        },
+        "id": "3d078596-bb27-4f61-abe9-3f6a61b29791",
+        "latencyMs": 1090,
+        "namedScores": {
+          "Format": 1,
+          "Schema": 0,
+          "Correctness": 1
+        },
+        "prompt": {
+          "raw": "You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: I was charged twice for my Team plan this month (invoice #4471). Please refund one of the charges.",
+          "label": "v0 (provided): prompts/triage_v0.txt: You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: {{ticket}}",
+          "config": {}
+        },
+        "promptId": "e0abd95becc302fe278428bd26cf3b14a033e6f95d1042b1e6cec3a7b480c368",
+        "promptIdx": 0,
+        "provider": {
+          "id": "anthropic:messages:claude-haiku-5-5",
+          "label": "haiku"
+        },
+        "response": {
+          "output": "{\"category\": \"billing\", \"priority\": \"high\", \"summary\": \"Customer was charged twice for their Team plan this month (invoice #4471) and requests a refund of one of the duplicate charges.\"}",
+          "tokenUsage": {
+            "prompt": 138,
+            "completion": 64,
+            "cached": 0,
+            "total": 202,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "finishReason": "stop"
+        },
+        "score": 0.6666666666666666,
+        "success": false,
+        "testCase": {
+          "description": "T1 typical: duplicate charge",
+          "vars": {
+            "ticket": "I was charged twice for my Team plan this month (invoice #4471). Please refund one of the charges."
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://checks.js:validJson",
+              "metric": "Format"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:schemaOk",
+              "metric": "Schema"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:categoryIs",
+              "config": {
+                "expected": "billing"
+              },
+              "metric": "Correctness"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 138,
+          "completion": 64,
+          "cached": 0,
+          "total": 202,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "ticket": "I was charged twice for my Team plan this month (invoice #4471). Please refund one of the charges."
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "error": "priority \"high\" is not an allowed label; summary has 26 words (max 25)",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.6666666666666666,
+          "reason": "priority \"high\" is not an allowed label; summary has 26 words (max 25)",
+          "namedScores": {
+            "Format": 1,
+            "Schema": 0,
+            "Correctness": 1
+          },
+          "namedScoreWeights": {
+            "Format": 1,
+            "Schema": 1,
+            "Correctness": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "The reply is a bare JSON object",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:validJson",
+                "metric": "Format"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "priority \"high\" is not an allowed label; summary has 26 words (max 25)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:schemaOk",
+                "metric": "Schema"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "category is \"bug\", expected \"bug\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:categoryIs",
+                "config": {
+                  "expected": "bug"
+                },
+                "metric": "Correctness"
+              }
+            }
+          ]
+        },
+        "id": "80cd73ef-d71f-41a9-8834-7dc0a5cd2f1d",
+        "latencyMs": 1044,
+        "namedScores": {
+          "Format": 1,
+          "Schema": 0,
+          "Correctness": 1
+        },
+        "prompt": {
+          "raw": "You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: Since the last update the iOS app crashes every time I open a note that contains a table. It happens on both of my phones.",
+          "label": "v0 (provided): prompts/triage_v0.txt: You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: {{ticket}}",
+          "config": {}
+        },
+        "promptId": "e0abd95becc302fe278428bd26cf3b14a033e6f95d1042b1e6cec3a7b480c368",
+        "promptIdx": 0,
+        "provider": {
+          "id": "anthropic:messages:claude-haiku-5-5",
+          "label": "haiku"
+        },
+        "response": {
+          "output": "{\"category\": \"bug\", \"priority\": \"high\", \"summary\": \"Since the latest update, the iOS app crashes whenever the user opens a note containing a table. The issue occurs on both of the customer's phones.\"}",
+          "tokenUsage": {
+            "prompt": 141,
+            "completion": 68,
+            "cached": 0,
+            "total": 209,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "finishReason": "stop"
+        },
+        "score": 0.6666666666666666,
+        "success": false,
+        "testCase": {
+          "description": "T2 typical: app crash",
+          "vars": {
+            "ticket": "Since the last update the iOS app crashes every time I open a note that contains a table. It happens on both of my phones."
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://checks.js:validJson",
+              "metric": "Format"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:schemaOk",
+              "metric": "Schema"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:categoryIs",
+              "config": {
+                "expected": "bug"
+              },
+              "metric": "Correctness"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 141,
+          "completion": 68,
+          "cached": 0,
+          "total": 209,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "ticket": "Since the last update the iOS app crashes every time I open a note that contains a table. It happens on both of my phones."
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "error": "category is \"account access\", expected \"account_access\"",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.5,
+          "reason": "category is \"account access\", expected \"account_access\"",
+          "namedScores": {
+            "Format": 1,
+            "Schema": 0,
+            "Correctness": 0.5
+          },
+          "namedScoreWeights": {
+            "Format": 1,
+            "Schema": 1,
+            "Correctness": 2
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "The reply is a bare JSON object",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:validJson",
+                "metric": "Format"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "category \"account access\" is not an allowed label; summary has 28 words (max 25)",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:schemaOk",
+                "metric": "Schema"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0,
+              "reason": "category is \"account access\", expected \"account_access\"",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:categoryIs",
+                "config": {
+                  "expected": "account_access"
+                },
+                "metric": "Correctness"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "priority is \"urgent\", expected one of normal, urgent",
+              "assertion": {
+                "type": "javascript",
+                "value": "file://checks.js:priorityIn",
+                "config": {
+                  "values": [
+                    "normal",
+                    "urgent"
+                  ]
+                },
+                "metric": "Correctness"
+              }
+            }
+          ]
+        },
+        "id": "d2278aa4-ad2a-4e45-ab68-93dd3cb50d8c",
+        "latencyMs": 1109,
+        "namedScores": {
+          "Format": 1,
+          "Schema": 0,
+          "Correctness": 0.5
+        },
+        "prompt": {
+          "raw": "You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: I can't log in. The password reset email never arrives, and I have a client presentation in an hour with all my notes in the app.",
+          "label": "v0 (provided): prompts/triage_v0.txt: You are a support assistant for Nimbus Notes, a note-taking app.\n\nRead the customer's ticket and give me the category, priority and a short summary. Reply with JSON only.\n\nCategories: billing, bug, feature request, account access, other\nPriorities: low, normal, high, urgent\n\nTicket: {{ticket}}",
+          "config": {}
+        },
+        "promptId": "e0abd95becc302fe278428bd26cf3b14a033e6f95d1042b1e6cec3a7b480c368",
+        "promptIdx": 0,
+        "provider": {
+          "id": "anthropic:messages:claude-haiku-5-5",
+          "label": "haiku"
+        },
+        "response": {
+          "output": "{\"category\": \"account access\", \"priority\": \"urgent\", \"summary\": \"Customer cannot log in because the password reset email never arrives. They have a client presentation in one hour and need access to their notes in the app.\"}",
+          "tokenUsage": {
+            "prompt": 143,
+            "completion": 66,
+            "cached": 0,
+            "total": 209,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "finishReason": "stop"
+        },
+        "score": 0.5,
+        "success": false,
+        "testCase": {
+          "description": "T3 typical: cannot log in",
+          "vars": {
+            "ticket": "I can't log in. The password reset email never arrives, and I have a client presentation in an hour with all my notes in the app."
+          },
+          "assert": [
+            {
+              "type": "javascript",
+              "value": "file://checks.js:validJson",
+              "metric": "Format"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:schemaOk",
+              "metric": "Schema"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:categoryIs",
+              "config": {
+                "expected": "account_access"
+              },
+              "metric": "Correctness"
+            },
+            {
+              "type": "javascript",
+              "value": "file://checks.js:priorityIn",
+              "config": {
+                "values": [
+                  "normal",
+                  "urgent"
+                ]
+              },
+              "metric": "Correctness"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 143,
+          "completion": 66,
+          "cached": 0,
+          "total": 209,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "ticket": "I can't log in. The password reset email never arrives, and I have a client presentation in an hour with all my notes in the app."
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      }
+    ],
+    "stats": {
+      "successes": 0,
+      "failures": 3,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 422,
+        "completion": 198,
+        "cached": 0,
+        "total": 620,
+        "numRequests": 3,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 1126,
+      "evaluationDurationMs": 1126
+    }
+  },
+  "config": {
+    "description": "Week 10 lab: Nimbus Notes ticket triage",
+    "prompts": [
+      {
+        "id": "file://prompts/triage_v0.txt",
+        "label": "v0 (provided)"
+      }
+    ],
+    "providers": [
+      {
+        "id": "anthropic:messages:claude-haiku-5-5",
+        "label": "haiku",
+        "config": {
+          "temperature": 1,
+          "max_tokens": 300
+        }
+      }
+    ],
+    "tests": [
+      {
+        "description": "T1 typical: duplicate charge",
+        "vars": {
+          "ticket": "I was charged twice for my Team plan this month (invoice #4471). Please refund one of the charges."
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://checks.js:validJson",
+            "metric": "Format"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:schemaOk",
+            "metric": "Schema"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:categoryIs",
+            "config": {
+              "expected": "billing"
+            },
+            "metric": "Correctness"
+          }
+        ]
+      },
+      {
+        "description": "T2 typical: app crash",
+        "vars": {
+          "ticket": "Since the last update the iOS app crashes every time I open a note that contains a table. It happens on both of my phones."
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://checks.js:validJson",
+            "metric": "Format"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:schemaOk",
+            "metric": "Schema"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:categoryIs",
+            "config": {
+              "expected": "bug"
+            },
+            "metric": "Correctness"
+          }
+        ]
+      },
+      {
+        "description": "T3 typical: cannot log in",
+        "vars": {
+          "ticket": "I can't log in. The password reset email never arrives, and I have a client presentation in an hour with all my notes in the app."
+        },
+        "assert": [
+          {
+            "type": "javascript",
+            "value": "file://checks.js:validJson",
+            "metric": "Format"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:schemaOk",
+            "metric": "Schema"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:categoryIs",
+            "config": {
+              "expected": "account_access"
+            },
+            "metric": "Correctness"
+          },
+          {
+            "type": "javascript",
+            "value": "file://checks.js:priorityIn",
+            "config": {
+              "values": [
+                "normal",
+                "urgent"
+              ]
+            },
+            "metric": "Correctness"
+          }
+        ]
+      }
+    ],
+    "outputPath": [
+      "results_v0_run1.json"
+    ],
+    "extensions": [],
+    "basePath": "/home/dalius/Projects/dalius/nycu-ai-itl_dalius/lab10"
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.125.1",
+    "nodeVersion": "v24.22.2",
+    "platform": "linux",
+    "arch": "x64",
+    "exportedAt": "2026-11-11T09:12:42.342Z",
+    "evaluationCreatedAt": "2026-11-11T09:12:41.194Z"
+  },
+  "vars": [
+    "ticket"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "showProgressBar": true,
+    "repeat": 1,
+    "maxConcurrency": 4,
+    "cache": false
+  }
+}

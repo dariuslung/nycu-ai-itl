@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 10 Lab — CSIC30216 Fall 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+  <!-- ── Top navbar ─────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="navbar-inner">
+
+      <!-- Course identity -->
+      <a class="navbar-brand" href="/">
+        <span class="brand-code">CSIC30216</span>
+        <span class="brand-name">AI-in-the-Loop in Software Project Cycle</span>
+      </a>
+
+      <!-- Desktop nav links -->
+      <nav class="navbar-links" aria-label="Primary navigation">
+        
+          
+        
+          
+          <a href="/syllabus"
+             class="nav-link">
+            Syllabus
+          </a>
+          
+        
+          
+          <a href="/calendar"
+             class="nav-link">
+            Calendar
+          </a>
+          
+        
+          
+          <a href="/assignments"
+             class="nav-link">
+            Assignments
+          </a>
+          
+        
+          
+          <a href="/project"
+             class="nav-link">
+            Final Project
+          </a>
+          
+        
+          
+          <a href="/resources"
+             class="nav-link">
+            Resources
+          </a>
+          
+        
+        
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+    </div>
+
+    <!-- Mobile dropdown -->
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+      
+        <a href="/"
+           class="mobile-link">
+          Home
+        </a>
+      
+        <a href="/syllabus"
+           class="mobile-link">
+          Syllabus
+        </a>
+      
+        <a href="/calendar"
+           class="mobile-link">
+          Calendar
+        </a>
+      
+        <a href="/assignments"
+           class="mobile-link">
+          Assignments
+        </a>
+      
+        <a href="/project"
+           class="mobile-link">
+          Final Project
+        </a>
+      
+        <a href="/resources"
+           class="mobile-link">
+          Resources
+        </a>
+      
+      
+      
+        <a href="https://e3p.nycu.edu.tw/course/view.php?id=27454" class="mobile-link" target="_blank" rel="noopener">E3 ↗</a>
+      
+      
+    </nav>
+  </header>
+
+  <!-- ── Page content ───────────────────────────────────────── -->
+  <main class="main-content">
+    <div class="content-inner">
+      <div class="page-header">
+  <h1>Week 10 Lab — Build and Run a Prompt Test Suite (PromptFoo)</h1>
+  <p class="page-subtitle">CSIC30216 &middot; Fall 2026</p>
+</div>
+
+<h2>Goal</h2>
+<p>
+  You are given a prompt that triages customer tickets for a (fictional) note-taking app,
+  <strong>Nimbus Notes</strong>. A program (the <em>ticket router</em>) reads the model's reply and
+  sends the ticket to a team, so the reply has to be exact. Your job is to <strong>build a 10-case
+  test suite</strong> for this prompt, <strong>run it with PromptFoo</strong>, <strong>fix the most
+  important failure</strong>, and <strong>document what testing revealed</strong>.
+</p>
+<p><strong>Working style:</strong> In-person lab, individual &middot; <strong>Total time:</strong> ~60 minutes</p>
+
+<div class="callout note">
+  <strong>This lab is practice for Assignment 2, Part B.</strong> Part B asks for a 10-case suite
+  on <em>your own</em> prompt from Part A. Here you do the same steps on a prompt we give you, so
+  you will know the workflow, the file formats and the traps before you do it on your own prompt.
+</div>
+<div class="callout note">
+  <strong>Failures here are findable.</strong> The provided prompt has several planted weaknesses.
+  If you cannot make a particular test fail, that is a valid result and the guide says what to
+  report.
+</div>
+
+<h2>What You Submit <span class="lab-timing">(read this first)</span></h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <tbody>
+    <tr><td><strong>Who</strong></td><td>Individual. Each student submits their own file</td></tr>
+    <tr><td><strong>What</strong></td><td><strong>One PDF document</strong> with the contents listed below</td></tr>
+    <tr><td><strong>Where</strong></td><td>E3, under &ldquo;<a href="https://e3p.nycu.edu.tw/mod/assign/view.php?id=252597">Week 10 Lab</a>&rdquo;</td></tr>
+    <tr><td><strong>When</strong></td><td>By the end of <strong>Wednesday, November 11 (23:59)</strong></td></tr>
+    <tr><td><strong>File name</strong></td><td><code>Week10_Lab_&lt;your student ID&gt;.pdf</code></td></tr>
+    <tr><td><strong>Grading</strong></td><td>Graded on completion, like the earlier labs. We encourage you to be specific, because the detail is what makes the lab useful to you</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Your PDF should contain, in this order:</strong></p>
+<ol>
+  <li><strong>Header:</strong> your name, student ID, team number, the model you used (real model or practice stand-in)</li>
+  <li><strong>Part 1:</strong> your predictions and the results of the provided three tests</li>
+  <li><strong>Part 2:</strong> your ten-case table (the six you wrote plus the three provided; the tenth comes in Part 3), with your written prediction for P1 and the pass/fail result of each</li>
+  <li><strong>Part 3:</strong> the failure you chose to fix and why, your before/after prompt, the before/after results, your R1 regression test, and the repeat-run check. Optionally: the reworded-prompt control and the stronger-model run</li>
+  <li><strong>Part 4:</strong> a failure the prompt cannot fix and the architectural fix, and your paragraph on what testing revealed</li>
+</ol>
+<p>
+  The optional steps in Part 3 are not required for completion. A fillable copy is in
+  <code>week10_lab_submission_template.md</code>, available with the
+  <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=252304">required lab files</a> on E3.
+  Write in any tool and save as PDF before uploading. Do <strong>not</strong> include your API key.
+</p>
+
+<h2>Time Plan</h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>Part</th><th>What</th><th>Minutes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Setup</td><td>Node, PromptFoo, files, smoke test</td><td>5</td></tr>
+    <tr><td>Part 1</td><td>run the provided tests; learn to read the viewer</td><td>10</td></tr>
+    <tr><td>Part 2</td><td>write six more tests, run, read failures</td><td>20</td></tr>
+    <tr><td>Part 3</td><td>choose the most important failure; fix it; regression test; repeat run (optional: control, stronger model)</td><td>15</td></tr>
+    <tr><td>Part 4</td><td>what a prompt cannot fix; what testing revealed</td><td>10</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Setup <span class="lab-timing">(5 minutes)</span></h2>
+<p>
+  PromptFoo needs <strong>Node.js 22.22 or newer</strong> (the current LTS, 24, is fine). Check
+  with <code>node --version</code>.
+</p>
+<ol>
+  <li>
+    Put the files from the student package <strong>in one folder</strong>. Download them from the
+    <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=252304">required lab files</a> on E3
+  </li>
+  <li>
+    In that folder run <code>python week10_setup_check.py</code>. Do this <strong>before
+    class</strong> if you can; it checks Node, the files and PromptFoo (the first run downloads
+    PromptFoo, which can take a minute)
+  </li>
+  <li>
+    <strong>API key</strong> — distributed with the
+    <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=252304">required lab files</a> on E3;
+    ask a TA if you don't have one yet. Set it in your terminal and never in a file:
+    <ul>
+      <li>macOS / Linux: <code>export ANTHROPIC_API_KEY=your-key-here</code></li>
+      <li>Windows: <code>setx ANTHROPIC_API_KEY your-key-here</code>, then open a <strong>new</strong> terminal</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Smoke test:</strong> <code>npx promptfoo@latest eval --no-cache</code>. After about 30
+    seconds you should see a table with three rows, and some of them failing
+  </li>
+  <li>Open the viewer: <code>npx promptfoo@latest view</code> (it opens a page on your own computer)</li>
+</ol>
+
+<div class="callout note">
+  <strong>No key, or the key does not work yet?</strong> Use the practice stand-in. It is a small
+  script that imitates a model, free and with no key:
+  <code>npx promptfoo@latest eval -c promptfooconfig.practice.yaml --no-cache</code>. It is not a
+  real model and fails in simpler ways. Say in your header which one you used. Switch to the real
+  model when your key arrives.
+</div>
+
+<div class="callout warning">
+  <strong>Protect your key.</strong> Never post it on E3, the course website, in email, in a
+  screenshot, or in your team's repository. The class shares a budget: keep <code>--repeat</code>
+  at 5 or below.
+</div>
+
+<h2>What the Starter Project Gives You</h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>File</th><th>What it is</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>prompts/triage_v0.txt</code></td><td>The prompt under test. <strong>Do not edit it:</strong> it is your &ldquo;before&rdquo;</td></tr>
+    <tr><td><code>prompts/triage_mine.txt</code></td><td>A copy of v0 for you to edit in Part 3</td></tr>
+    <tr><td><code>prompts/triage_v0_reworded.txt</code></td><td>v0 with the same content in different words and order. Used only in the optional control (Part 3, step 5)</td></tr>
+    <tr><td><code>tests.yaml</code></td><td>Your test suite. Three tests are written; you add the rest</td></tr>
+    <tr><td><code>checks.js</code></td><td>Ready-made checks (<code>validJson</code>, <code>schemaOk</code>, <code>categoryIs</code>, ...). Read the header</td></tr>
+    <tr><td><code>tickets/long_ticket.txt</code></td><td>A 643-word ticket for the &ldquo;very long&rdquo; test</td></tr>
+    <tr><td><code>promptfooconfig.yaml</code></td><td>Real model setup</td></tr>
+    <tr><td><code>promptfooconfig.practice.yaml</code>, <code>practice_provider.js</code></td><td>The free stand-in</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>What the ticket router requires</strong> (this is the specification your tests check):</p>
+<ul>
+  <li>the reply is a <strong>bare JSON object</strong>: no code fences, no text before or after it</li>
+  <li>exactly three keys: <code>category</code>, <code>priority</code>, <code>summary</code></li>
+  <li><code>category</code> is one of <code>billing</code>, <code>bug</code>, <code>feature_request</code>, <code>account_access</code>, <code>other</code> (these exact spellings)</li>
+  <li><code>priority</code> is one of <code>low</code>, <code>normal</code>, <code>urgent</code></li>
+  <li><code>summary</code> is one short sentence in English (at most 25 words)</li>
+</ul>
+<p>Notice what the prompt under test says, and compare it with this list. Gaps between the two are where the failures are.</p>
+
+<h2>Part 1 — Run the Provided Tests <span class="lab-timing">(10 minutes)</span></h2>
+
+<h3>Step 1: Predict <span class="lab-timing">(3 minutes)</span></h3>
+<p>
+  Open <code>prompts/triage_v0.txt</code> and <code>tests.yaml</code>. For each of T1, T2, T3,
+  write <strong>pass</strong> or <strong>fail</strong>, and if fail, which check (Format, Schema or
+  Correctness). Do this <strong>before</strong> running.
+</p>
+
+<h3>Step 2: Run <span class="lab-timing">(3 minutes)</span></h3>
+<pre class="code-block"><code>npx promptfoo@latest eval --no-cache
+npx promptfoo@latest view</code></pre>
+
+<h3>Step 3: Read the Results <span class="lab-timing">(4 minutes)</span></h3>
+<p>
+  In the viewer, click a failing cell. For each test, record: did it pass; if not, which check
+  failed and the <strong>reason</strong> shown; and what the model actually replied. Compare with
+  your prediction.
+</p>
+
+<div class="callout note">
+  <strong>Read the reason, not just the red.</strong> A test can fail for a reason that has
+  nothing to do with what you were testing. A reply wrapped in code fences fails Format even when
+  the category is right. The check named in the reason tells you what to look for in the reply.
+</div>
+
+<h2>Part 2 — Write Six More Tests <span class="lab-timing">(20 minutes)</span></h2>
+<p>Add these to <code>tests.yaml</code>, copying the pattern of T1 to T3. The requirement, from Assignment 2, is to cover these categories:</p>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>ID</th><th>Category</th><th>What to write</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>E1</td><td>empty input</td><td><code>ticket: " "</code></td></tr>
+    <tr><td>L1</td><td>very long input</td><td><code>ticket: file://tickets/long_ticket.txt</code>. Decide first what the correct category and priority are</td></tr>
+    <tr><td>D1</td><td>delimiter conflict</td><td>A ticket containing characters or tags the prompt uses to separate things (for example <code>```</code> or <code>&lt;/ticket&gt;</code>), ideally with an instruction hidden inside</td></tr>
+    <tr><td>S1</td><td>input sensitivity</td><td>The <strong>same problem as T2</strong>, rephrased by the customer (casual, typos)</td></tr>
+    <tr><td>S2</td><td>input sensitivity</td><td>The same problem as T2 in <strong>Traditional Chinese</strong> (or another language you read)</td></tr>
+    <tr><td>P1</td><td>your predicted failure</td><td>A ticket you expect the prompt to get wrong. <strong>Write the prediction in <code>description</code> before you run it</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Writing a Good Test</h3>
+<ol>
+  <li>Write down the <strong>expected behaviour first</strong>: what should the router receive?</li>
+  <li>Choose the checks: Format (<code>validJson</code>), Schema (<code>schemaOk</code>), Correctness (<code>categoryIs</code>, <code>priorityNot</code>, ...), and for hidden instructions, Safety (<code>summaryHasNo</code>, <code>priorityNot</code>)</li>
+  <li>Test <strong>properties</strong>, not exact sentences: the summary will be worded differently each time, so do not test for exact text</li>
+  <li>One test, one thing. If a test could fail for three reasons, you will not know which it was</li>
+</ol>
+
+<h3>Run and Read</h3>
+<p>
+  Run the suite again (<code>npx promptfoo@latest eval --no-cache</code>) and open the viewer.
+  Record the nine results. Use <code>--filter-pattern "D1"</code> to run only tests whose
+  description matches.
+</p>
+
+<h2>Part 3 — Fix the Most Important Failure <span class="lab-timing">(15 minutes)</span></h2>
+
+<h3>Step 1: Choose <span class="lab-timing">(3 minutes)</span></h3>
+<p>
+  Look at your failures. Choose the <strong>most harmful</strong> one, not the easiest. Ask:
+  <em>if this happened to a real customer, what would it cost?</em> A ticket that hijacks the
+  router is a worse failure than a label spelled differently. Write down which you chose and why.
+</p>
+
+<h3>Step 2: Fix <span class="lab-timing">(6 minutes)</span></h3>
+<p>
+  Edit <code>prompts/triage_mine.txt</code> (never v0). Change <strong>one thing at a time</strong>
+  when you can, so you know what worked. Then enable your prompt in
+  <code>promptfooconfig.yaml</code> by removing the <code>#</code> from the two &ldquo;mine&rdquo;
+  lines, and re-run. The viewer shows v0 and your prompt side by side.
+</p>
+
+<h3>Step 3: Add the Regression Test R1 <span class="lab-timing">(3 minutes)</span></h3>
+<p>
+  Add a <strong>tenth</strong> test to <code>tests.yaml</code>: a <em>new</em> ticket (not one you
+  used to design the fix) that would catch the same kind of failure coming back. Write why this
+  ticket is different from the one that failed.
+</p>
+<div class="callout note">
+  <strong>Why a new ticket?</strong> A fix tuned on the very ticket it was checked on proves very
+  little. R1 is the ticket the fix has never seen.
+</div>
+
+<h3>Step 4: Repeat Run <span class="lab-timing">(3 minutes)</span></h3>
+<p>
+  Run your prompt several times: <code>npx promptfoo@latest eval --no-cache --repeat 3</code>.
+  Record any test that <strong>does not give the same result every time</strong>. A test that
+  passes 3 out of 3 only shows the failure rate is probably below about 60%, not that it is zero;
+  say which of your tests you trust and why.
+</p>
+
+<h3>Step 5 (Optional): A Control for Your Fix</h3>
+<p>
+  Is your improvement from the fix, or from simply changing the words? Remove the <code>#</code>
+  from the two &ldquo;v0 reworded&rdquo; lines in <code>promptfooconfig.yaml</code> and run with
+  <code>--repeat 3 --no-cache</code>. <code>v0 reworded</code> has the <strong>same content</strong>
+  as v0 in different wording and order, so any change in its results is <strong>prompt
+  sensitivity</strong>, not the effect of a fix.
+</p>
+<p>
+  Record: do v0 and v0 reworded give the same results? Did the rewording change any test? Compare
+  that with how much your fix changed. Remember that with ten tests and sampling noise, a small
+  difference is mostly noise, and <strong>&ldquo;no difference&rdquo; is a valid result</strong>
+  (recent studies suggest strong models are often steady about wording, so it is a likely one).
+  Say what you can and cannot conclude. (Not for the practice stand-in: it follows fixed rules and
+  tells you nothing about a real model.)
+</p>
+
+<h3>Step 6 (Optional): One Run on a Stronger Model</h3>
+<p>
+  Cheap runs are for iterating; the final check belongs on the model you would ship. Follow the
+  comments in <code>promptfooconfig.yaml</code> to run your final prompt <strong>once</strong> on
+  <code>sonnet</code>. Record whether any test changes result. It costs more per call than Haiku
+  and the class shares a budget, so run it once and do not loop.
+</p>
+
+<h3>If Nothing Failed</h3>
+<p>
+  Report it honestly (that is a valid result). Then show you tried: add two harder tickets (for
+  example a ticket that is both a billing problem and a login problem, or a hidden instruction in
+  a Chinese ticket), run them, and report what happened. Then answer Part 4 as written, using a
+  failure you think the prompt <em>would</em> have in production.
+</p>
+
+<h2>Part 4 — What Testing Revealed <span class="lab-timing">(10 minutes)</span></h2>
+<p>
+  <strong>Question 1 (3–5 sentences).</strong> Name <strong>one</strong> failure that no change to
+  the prompt can reliably fix (for example: a ticket that tries to steer the router, a model that
+  changes behaviour after an update, or a check that needs to know the customer's real account).
+  Describe the <strong>architectural fix</strong> (something outside the prompt: code that
+  validates the reply, a restricted output format, a human review step, a second check...). Say
+  what that fix costs.
+</p>
+<p>
+  <strong>Question 2 (one paragraph, 5–8 sentences).</strong> What did testing reveal that reading
+  the prompt did not? Include: which of your predictions were wrong; which tests you trust and
+  which you do not (and why); what ten test cases still do not tell you.
+</p>
+<div class="callout note">
+  <strong>Optional extension (not required).</strong> Add a check of your own to
+  <code>checks.js</code> (for example, that the summary is no longer than 15 words), or add an
+  <code>llm-rubric</code> assertion for &ldquo;the summary is faithful to the ticket&rdquo; and
+  explain what you would do to confirm that the judge is reliable.
+</div>
+
+<h2>Submission Checklist</h2>
+<ul>
+  <li>Name, student ID, team number and model (or stand-in) are filled in</li>
+  <li>Part 1: predictions and results for T1 to T3, with the failure reasons</li>
+  <li>Part 2: a ten-case table (ID, ticket, expected behaviour, checks, result for v0), and your P1 prediction written <strong>before</strong> running</li>
+  <li>Part 3: the failure you chose and why, your edited prompt, before/after results, the R1 test, and the repeat-run result (the control and the stronger-model run are optional)</li>
+  <li>Question 1 and Question 2 are answered</li>
+  <li>Your answers are specific to what you saw</li>
+  <li>No API key appears anywhere</li>
+  <li>Saved as one PDF named <code>Week10_Lab_&lt;student ID&gt;.pdf</code></li>
+</ul>
+<div class="callout warning">
+  Upload it on E3 under &ldquo;<a href="https://e3p.nycu.edu.tw/mod/assign/view.php?id=252597">Week 10 Lab</a>&rdquo; by <strong>Wednesday, November 11 (23:59)</strong>.
+</div>
+
+<h2>If Things Go Wrong</h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>Problem</th><th>What to do</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>node: command not found</code>, or Node is older than 22.22</td><td>Install the current LTS from nodejs.org, open a new terminal, and rerun the setup check</td></tr>
+    <tr><td><code>npx</code> hangs or fails to download PromptFoo</td><td>Check your network (a VPN or proxy can block it). Try <code>npm install -g promptfoo</code> and then use <code>promptfoo</code> instead of <code>npx promptfoo@latest</code>. Meanwhile tell a TA</td></tr>
+    <tr><td>An authentication error / &ldquo;API key&rdquo; message</td><td>The key is missing or wrong. Reset it, open a <strong>new</strong> terminal if you used <code>setx</code>, and rerun. Use the practice stand-in meanwhile</td></tr>
+    <tr><td>The API rejects <code>temperature</code></td><td>Delete the <code>temperature: 1</code> line in <code>promptfooconfig.yaml</code> and tell a TA</td></tr>
+    <tr><td>&ldquo;Your credit balance is too low&rdquo;</td><td>Tell a TA. Do not keep retrying</td></tr>
+    <tr><td>Both haiku and sonnet are active and the run is slow or costly</td><td>Both are running every test. Comment out one provider (see the comments in <code>promptfooconfig.yaml</code>)</td></tr>
+    <tr><td>Rate limit or &ldquo;overloaded&rdquo;</td><td>Wait 30 seconds, then retry with a lower <code>-j</code> (for example <code>-j 2</code>)</td></tr>
+    <tr><td>YAML error</td><td>Indentation is part of YAML: use spaces, never tabs, and line up your test with the examples</td></tr>
+    <tr><td>A check says &ldquo;No JSON object found&rdquo;</td><td>The reply had no JSON in it. Open the cell in the viewer and read the actual reply</td></tr>
+    <tr><td>All repeats of a test look identical</td><td>Add <code>--no-cache</code>. PromptFoo reuses earlier answers otherwise</td></tr>
+    <tr><td><code>file://</code> path not found</td><td>Run PromptFoo from the project folder</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><a href="/calendar/">&larr; Back to Calendar</a></p>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>CSIC30216 &middot; AI-in-the-Loop in Software Project Cycle &middot; Fall 2026</span>
+      <span>National Yang Ming Chiao Tung University</span>
+    </div>
+  </footer>
+
+  <script>
+    const btn  = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open);
+    });
+    // Close menu on link click
+    menu.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', false);
+      })
+    );
+  </script>
+
+</body>
+</html>
