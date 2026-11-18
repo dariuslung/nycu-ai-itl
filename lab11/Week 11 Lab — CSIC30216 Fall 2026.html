@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 11 Lab — CSIC30216 Fall 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+
+  <!-- ── Top navbar ─────────────────────────────────────────── -->
+  <header class="navbar">
+    <div class="navbar-inner">
+
+      <!-- Course identity -->
+      <a class="navbar-brand" href="/">
+        <span class="brand-code">CSIC30216</span>
+        <span class="brand-name">AI-in-the-Loop in Software Project Cycle</span>
+      </a>
+
+      <!-- Desktop nav links -->
+      <nav class="navbar-links" aria-label="Primary navigation">
+        
+          
+        
+          
+          <a href="/syllabus"
+             class="nav-link">
+            Syllabus
+          </a>
+          
+        
+          
+          <a href="/calendar"
+             class="nav-link">
+            Calendar
+          </a>
+          
+        
+          
+          <a href="/assignments"
+             class="nav-link">
+            Assignments
+          </a>
+          
+        
+          
+          <a href="/project"
+             class="nav-link">
+            Final Project
+          </a>
+          
+        
+          
+          <a href="/resources"
+             class="nav-link">
+            Resources
+          </a>
+          
+        
+        
+      </nav>
+
+      <!-- Mobile hamburger -->
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+    </div>
+
+    <!-- Mobile dropdown -->
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+      
+        <a href="/"
+           class="mobile-link">
+          Home
+        </a>
+      
+        <a href="/syllabus"
+           class="mobile-link">
+          Syllabus
+        </a>
+      
+        <a href="/calendar"
+           class="mobile-link">
+          Calendar
+        </a>
+      
+        <a href="/assignments"
+           class="mobile-link">
+          Assignments
+        </a>
+      
+        <a href="/project"
+           class="mobile-link">
+          Final Project
+        </a>
+      
+        <a href="/resources"
+           class="mobile-link">
+          Resources
+        </a>
+      
+      
+      
+        <a href="https://e3p.nycu.edu.tw/course/view.php?id=27454" class="mobile-link" target="_blank" rel="noopener">E3 ↗</a>
+      
+      
+    </nav>
+  </header>
+
+  <!-- ── Page content ───────────────────────────────────────── -->
+  <main class="main-content">
+    <div class="content-inner">
+      <div class="page-header">
+  <h1>Week 11 Lab — Debug an AI-Generated Codebase</h1>
+  <p class="page-subtitle">CSIC30216 &middot; Fall 2026</p>
+</div>
+
+<h2>Goal</h2>
+<p>
+  You are given <strong>TeamBoard</strong>, a small task tracker for student project teams, about
+  150 lines of Python. An AI wrote it. It contains <strong>five intentional bugs</strong>. The test
+  file catches <strong>four</strong> of them. The fifth has <strong>no test</strong>: you will have
+  to find it and write the test yourself. You will debug the same code <strong>twice</strong>:
+</p>
+<ol>
+  <li><strong>Part 1 (20 min), chat window:</strong> you use Claude in your web browser (claude.ai), the way most people use an AI chat: you paste code and error text, read the answer, and apply every change by hand. The model sees <strong>only what you paste</strong>.</li>
+  <li><strong>Part 2 (15 min), Claude Code:</strong> you start again from the <strong>original, unfixed</strong> code and let Claude Code read files, run tests and edit code, while you supervise.</li>
+  <li><strong>Part 3 (10 min):</strong> you take <strong>one problem of your own</strong> through the whole testing loop: a failing test, a fix, green, the whole suite, and a check that your test would catch a bad fix.</li>
+  <li><strong>Part 4 (10 min):</strong> you answer three comparison questions.</li>
+</ol>
+<p>In every part you use the same <strong>testing loop</strong> (below), and you record it in a small table.</p>
+
+<div class="callout note">
+  <strong>The point is not to fix the most bugs.</strong> The point is to notice what each way of
+  working gives you and what it takes away. Spend your time on the questions &ldquo;how did I know
+  that was right?&rdquo; and &ldquo;who decided that?&rdquo;
+</div>
+<div class="callout note">
+  <strong>This lab connects to your project.</strong> The bugs are the kinds that AI-written code
+  tends to contain in real projects. Your team is about to merge a lot of AI-assisted code (merge
+  day is this week, CP2 is next Monday).
+</div>
+
+<h2>What You Submit <span class="lab-timing">(read this first)</span></h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <tbody>
+    <tr><td><strong>Who</strong></td><td>Individual. Each student submits their own file</td></tr>
+    <tr><td><strong>What</strong></td><td><strong>One PDF document</strong> with the contents listed below</td></tr>
+    <tr><td><strong>Where</strong></td><td>E3, under &ldquo;<a href="https://e3p.nycu.edu.tw/mod/assign/view.php?id=254075">Week 11 Lab</a>&rdquo;</td></tr>
+    <tr><td><strong>When</strong></td><td>By the end of <strong>Wednesday, November 18 (23:59)</strong></td></tr>
+    <tr><td><strong>File name</strong></td><td><code>Week11_Lab_&lt;your student ID&gt;.pdf</code></td></tr>
+    <tr><td><strong>Grading</strong></td><td>Graded on completion (1%), like the earlier labs. We encourage you to be specific, because the detail is what makes the lab useful to you</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Your PDF should contain, in this order:</strong></p>
+<ol>
+  <li><strong>Header:</strong> your name, student ID, team number, the chat tool and model used in Part 1, the Claude Code model shown in <code>/status</code></li>
+  <li><strong>Bug report:</strong> one row for each of the five bugs (attempted is enough; fixed is better). Template in <code>week11_lab_submission_template.md</code>, available with the <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=254074">required lab files</a> on E3. Include your <strong>loop tables</strong>: one row per fix, for Part 1 and for Part 2 (see &ldquo;The testing loop&rdquo;)</li>
+  <li><strong>Chat log, Part 1:</strong> at least three exchanges that mattered (your prompt and the key part of the answer, copied from the chat), each with your note: what you asked, whether the answer was right, and how you checked. <strong>At least one entry must show a diagnosis you checked before applying a fix</strong> (see Part 1)</li>
+  <li><strong>Claude Code notes:</strong> a short list of what Claude Code did, in order, and which of its requests you approved, changed or declined</li>
+  <li><strong>Your own loop</strong> (Part 3): the test, the red output, your fix, the green output, the whole-suite result, and the result of undoing the fix; plus one line on whether the problem was a bug or a decision</li>
+  <li><strong>Three comparison questions</strong> (Part 4), answered in writing</li>
+</ol>
+<p>Do <strong>not</strong> include passwords, keys, or screenshots that show them.</p>
+
+<h2>Time Plan</h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>Part</th><th>What</th><th>Minutes</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Setup</td><td>install Claude Code if you have not yet, check all requirements, copy the code, run the tests</td><td>5</td></tr>
+    <tr><td>Part 1</td><td>debugging in a chat window</td><td>20</td></tr>
+    <tr><td>Part 2</td><td>the original code again, with Claude Code</td><td>15</td></tr>
+    <tr><td>Part 3</td><td>one problem of your own, through the whole loop</td><td>10</td></tr>
+    <tr><td>Part 4</td><td>three comparison questions</td><td>10</td></tr>
+  </tbody>
+</table>
+</div>
+<p>
+  That is 60 minutes. Use a timer. When Part 1 ends, <strong>stop and move on</strong>, even if you
+  did not fix all five.
+</p>
+
+<h2>Before Class</h2>
+<p>
+  Download the student package from the
+  <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=254074">required lab files</a> on E3.
+  Complete <code>week11_claude_code_setup.md</code>, then run <code>python week11_setup_check.py</code>.
+  If Claude Code does not work, <strong>tell a TA before Monday</strong>.
+</p>
+
+<h2>Setup <span class="lab-timing">(5 minutes)</span></h2>
+<p>
+  If you have not installed Claude Code yet, do it now with
+  <code>week11_claude_code_setup.md</code> (doing it before class is safer: if the installer has a
+  problem, 5 minutes is not enough to fix it). Then run
+  <code>python week11_setup_check.py</code> and fix anything marked PROBLEM, or tell a TA.
+</p>
+<p>
+  The student package (from the
+  <a href="https://e3p.nycu.edu.tw/mod/folder/view.php?id=254074">required lab files</a> on E3) has
+  a folder <code>teamboard/</code>. <strong>Do not edit it.</strong> Make two copies, so each part
+  starts from the original code:
+</p>
+<p><strong>macOS / Linux / WSL:</strong></p>
+<pre class="code-block"><code>cp -r teamboard teamboard_chat
+cp -r teamboard teamboard_cc</code></pre>
+<p><strong>Windows PowerShell:</strong></p>
+<pre class="code-block"><code>Copy-Item -Recurse teamboard teamboard_chat
+Copy-Item -Recurse teamboard teamboard_cc</code></pre>
+<p>Now look at the failing tests, in the chat copy:</p>
+<pre class="code-block"><code>cd teamboard_chat
+python -m unittest</code></pre>
+<p>
+  You should see <strong>4 problems out of 10 tests</strong> (2 failures, 2 errors). Remember there
+  are <strong>five</strong> bugs: one has no test. You may also run the demo with
+  <code>python -m teamboard.cli</code>. Do <strong>not</strong> read the code closely yet. Write
+  down your first impression of what you think the five bugs might be, in one line each. This is
+  your &ldquo;before&rdquo; guess.
+</p>
+
+<h2>The Testing Loop <span class="lab-timing">(use it in every part)</span></h2>
+<pre class="code-block"><code>1. Red      a test that fails because of the bug (a given one, or one you write)
+2. Fix      the smallest change
+3. Green    that test now passes
+4. Suite    run ALL the tests: did anything else break?
+5. Keep     the test stays in the suite, so the bug cannot come back unnoticed</code></pre>
+<p><strong>Record it.</strong> For every fix, add one row to your loop table (in the template):</p>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>Bug</th><th>Test that shows it (given, or mine)</th><th>Red before the fix?</th><th>Fix (one line)</th><th>Whole suite after (passing / total)</th><th>Anything else break?</th></tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table>
+</div>
+<p>It takes seconds per row. It is the evidence that you ran the loop and did not just fix things.</p>
+
+<div class="callout note">
+  <strong>The bug with no test (hint).</strong> It is a <strong>security</strong> problem in
+  <strong><code>db.py</code></strong>. To find it, ask for a security review of that file. Then,
+  <strong>before</strong> you fix it, write a test that fails because of it (red), and only then
+  fix it (green). This is the &ldquo;no trace? write a test first&rdquo; habit from the lecture.
+</div>
+
+<h2>Part 1 — Debugging in a Chat Window <span class="lab-timing">(20 minutes)</span></h2>
+<p>
+  This is debugging the way most people do it with AI: in a chat window, copying text back and
+  forth. (The course outline calls this the &ldquo;raw API&rdquo; approach: the model gets only the
+  text you send it, and nothing else.)
+</p>
+
+<h3>How You Work in This Part</h3>
+<ul>
+  <li>Open <strong>claude.ai</strong> in your browser, signed in with the same account you use for Claude Code, and start a <strong>new chat</strong>.</li>
+  <li><strong>Paste text only.</strong> Do not upload or attach files, and if the chat offers to run code for you, do not use it. You are testing what the model can do with only what you choose to paste. It cannot open your files, run your tests or change your code.</li>
+  <li>You apply every fix by hand, in <code>teamboard_chat</code>, and you run the tests yourself in your terminal.</li>
+  <li><strong>Do not open Claude Code in this part.</strong></li>
+  <li>
+    <strong>Keep a log as you go.</strong> Open a text file <code>chat_log.md</code> and, for each
+    exchange that matters, copy in your prompt (or a short summary of what you pasted), the key
+    part of the answer, and a short note: what you asked, whether the answer was right, how you
+    checked.
+  </li>
+</ul>
+
+<h3>A Way to Work</h3>
+<ol>
+  <li>Run the tests. Pick one failing test.</li>
+  <li>Build a prompt with: the <strong>failing test</strong>, the <strong>full error text</strong> (the traceback, or the assertion message), the <strong>function it points to</strong>, and one sentence about <strong>what the code should do</strong>.</li>
+  <li>Ask for a diagnosis <strong>before</strong> a fix: &ldquo;What is wrong, and why? Do not write code yet.&rdquo; You can also ask: &ldquo;Give me three possible causes, and how I could check each one.&rdquo;</li>
+  <li>
+    <strong>Get a check before you get a fix.</strong> Ask:
+    <blockquote><p><em>&ldquo;Before any fix: give me one command or a short test that would show your diagnosis is <strong>wrong</strong> if it were wrong. Tell me exactly what output you expect if you are right.&rdquo;</em></p></blockquote>
+    Then:
+    <ul>
+      <li><strong>Judge the check.</strong> Would it come out differently if the diagnosis were wrong? A check that does not touch the code (for example <code>print(3 &lt; 3)</code>) proves nothing. If it would pass either way, ask for a better one.</li>
+      <li><strong>Run it</strong> yourself, in your terminal, from the project folder.</li>
+      <li><strong>Compare</strong> the predicted output with what you got. If they differ, the diagnosis is in doubt: tell the model what you saw.</li>
+    </ul>
+  </li>
+  <li>If the check confirmed the diagnosis, ask for the smallest fix. Apply it yourself. Run the tests.</li>
+  <li>Repeat. If the tests are green but you do not understand why, that is not finished.</li>
+</ol>
+
+<div class="callout warning">
+  <strong>Required:</strong> at least <strong>one</strong> entry in your chat log must show this
+  pattern: the model's diagnosis, <strong>the check</strong>, <strong>the output it predicted</strong>,
+  <strong>the output you got</strong>, your answer to &ldquo;would this check have failed if the
+  diagnosis were wrong?&rdquo;, and only then the fix. Mark it <strong>CHECKED DIAGNOSIS</strong>.
+</div>
+
+<h3>Two Other Ways to Check <span class="lab-timing">(optional; try one if you have time)</span></h3>
+<ul>
+  <li><strong>Failing test first:</strong> &ldquo;Write a test that fails now because of this bug and will pass once it is fixed.&rdquo; Run it and see it fail (red) before the fix, and pass (green) after. This works well for bugs that do not crash.</li>
+  <li><strong>Second opinion:</strong> open a <strong>fresh</strong> chat, paste the same evidence (test, error, function) without the first answer, and see whether it reaches the same diagnosis. Quick, but weaker: both answers come from the same kind of model and can be wrong in the same way. Use it alongside a check, not instead of one.</li>
+</ul>
+
+<h3>Things to Think About While You Work <span class="lab-timing">(write answers in your notes)</span></h3>
+<ul>
+  <li>Three of the five problems do <strong>not crash the program</strong>: the test just reports a wrong answer or a slow run. How do you tell the model about a bug that has no stack trace?</li>
+  <li>One bug has <strong>no test</strong> (see the hint above). Paste <code>db.py</code> and ask for a security review. When you know the problem, ask: &ldquo;Write a unittest test, in the style of the tests I pasted, that fails because of this problem.&rdquo; Run it and see it <strong>fail</strong> before you fix anything. Would you have found this bug without the hint?</li>
+  <li>If the model suggests changing a <strong>test</strong> to make it pass, stop and think about whether the code or the test is wrong.</li>
+</ul>
+
+<p>
+  <strong>At minute 20, stop.</strong> Run the tests one last time and write down:
+  <em>bugs attempted / bugs fixed / tests passing (out of 10, plus any you added)</em>. Check that
+  your loop table has a row for each fix.
+</p>
+
+<h2>Part 2 — Claude Code <span class="lab-timing">(15 minutes)</span></h2>
+<p>
+  <strong>Start again from the original code.</strong> Use the second copy. In your terminal (if
+  you set <code>ANTHROPIC_API_KEY</code> for an earlier lab, unset it first; see the setup guide):
+</p>
+<pre class="code-block"><code>cd teamboard_cc
+git init
+git add .
+git commit -m "original unfixed code"
+claude</code></pre>
+<p>
+  (If git asks who you are, run <code>git config user.name "your name"</code> and
+  <code>git config user.email "you@example.com"</code>, then repeat the commit.)
+</p>
+<p>
+  The <code>git commit</code> matters: it lets you see exactly what Claude Code changed
+  (<code>git diff</code>), and undo it if you want to (<code>git checkout .</code>).
+</p>
+
+<h3>How You Work in This Part</h3>
+<ul>
+  <li>You do not paste the code. Claude Code can read the files itself and can run <code>python -m unittest</code>.</li>
+  <li><strong>Read every permission request before you approve it</strong> (editing a file, running a command). Do not choose any option that skips the questions. If a request surprises you, decline it and ask why.</li>
+  <li>Do <strong>not</strong> reuse your Part 1 answers. Ask Claude Code from scratch, as if you had not seen the bugs.</li>
+  <li>Keep notes as you go: what you asked, what it did, what you approved or declined.</li>
+</ul>
+
+<h3>A Way to Work</h3>
+<ol>
+  <li>Ask: <code>Run the tests and tell me what is failing. Do not change anything yet.</code></li>
+  <li>
+    Ask it for a diagnosis of each failure and read it. Do you agree?
+    Then ask, as in Part 1: <code>Before changing anything, show me a check that would prove your diagnosis wrong if it were wrong, and run it.</code> Read the check before you approve running it, and compare its output with what it predicted.
+  </li>
+  <li>
+    Ask it to <strong>work test-first</strong>: <code>For each bug: show me a failing test first (write one if no test catches it), then fix it, then run the whole test suite. Stop after each bug so I can check.</code> Read the diff for each change; after each one, run <code>git diff</code> and look at what actually changed. Fill in a loop-table row for each fix, as in Part 1.
+  </li>
+  <li>Ask it to find problems the tests do <strong>not</strong> show: <code>Review the code for problems the tests do not cover.</code> Compare its list with your five bugs.</li>
+  <li>When it says it is done, <strong>run the tests yourself</strong> and read the final <code>git diff</code>.</li>
+</ol>
+
+<h3>Look for These <span class="lab-timing">(write down any you see)</span></h3>
+<ul>
+  <li>Did it change a <strong>test</strong>, or only the code?</li>
+  <li>Did it change anything <strong>unrelated</strong> to the five bugs?</li>
+  <li>Did it <strong>explain</strong> what it did, or just do it?</li>
+  <li>Did it find something you did not?</li>
+  <li>Did it <strong>write a test</strong> for the bug that has none, <strong>before</strong> fixing it?</li>
+  <li>Did it <strong>run the whole suite</strong> after each fix, or only the one test?</li>
+</ul>
+
+<p>
+  <strong>At minute 15, stop.</strong> Write down:
+  <em>bugs fixed / tests passing / number of changes you declined or edited</em>.
+</p>
+
+<h2>Part 3 — One Problem of Your Own, Through the Whole Loop <span class="lab-timing">(10 minutes)</span></h2>
+<p>Real bugs usually do not come with a test. In this part you find one, write its test, and take it all the way round the loop.</p>
+<ol>
+  <li>Work in <code>teamboard_cc</code> (it has git). First save Part 2's work: <code>git add .</code> then <code>git commit -m "Part 2 fixes"</code>.</li>
+  <li>
+    Find a problem that <strong>no test covers</strong> (not the 10 given tests, and not the one
+    you wrote for the security bug). Look at the code with the four lenses from the lecture, or
+    try odd inputs in the Python shell. Some places to look: what happens with a due date that is
+    not a valid date; whether names match regardless of capital letters or spaces; empty titles; an
+    assignee that is only spaces. You may ask an AI tool for ideas, but <strong>you</strong> decide
+    which one to test.
+  </li>
+  <li>
+    <strong>Decide</strong> what the right behaviour is. Write one line: is this a
+    <strong>bug</strong> (the code breaks its own docstring), or a <strong>decision</strong> (the
+    docstring does not say, so you are choosing)? If it is a decision, say what you chose.
+  </li>
+  <li>
+    <strong>Red.</strong> Write <strong>one</strong> test for that behaviour in
+    <code>tests/test_teamboard.py</code> (copy the style of the existing tests). Run it.
+    <strong>It must fail.</strong> If it passes, the problem is not real or the test does not check
+    it: change the test or pick another problem. Then commit the test:
+    <code>git add .</code> and <code>git commit -m "Add failing test"</code>.
+  </li>
+  <li><strong>Fix.</strong> Make the smallest change that should make it pass (with the chat, with Claude Code, or by hand).</li>
+  <li><strong>Green.</strong> Run your test: it passes.</li>
+  <li><strong>Suite.</strong> Run all the tests: <code>python -m unittest</code>. Everything passes? If something else broke, that is a finding: write it down, then fix it.</li>
+  <li><strong>Would your test catch a bad fix?</strong> Undo the fix for a moment with <code>git stash</code>, run your test (it should be <strong>red</strong> again), then bring the fix back with <code>git stash pop</code>. (Without git: put the old line back by hand, run, and restore it.)</li>
+</ol>
+<p>
+  Paste into your PDF: the test, the red output, your fix (the diff), the green output, the
+  whole-suite result, and the result of step 8.
+</p>
+
+<h2>Part 4 — Three Comparison Questions <span class="lab-timing">(10 minutes)</span></h2>
+<p>
+  Answer in <strong>your own words</strong>, 4 to 8 sentences each. Refer to specific moments from
+  your two parts. &ldquo;It was faster&rdquo; is not an answer unless you say what was faster and
+  by how much.
+</p>
+<ol>
+  <li><strong>What did Claude Code do that the chat window could not?</strong></li>
+  <li><strong>Where did Claude Code make a decision you should have made yourself?</strong> (If it made none, say what it did that came closest, and why you were comfortable with it.)</li>
+  <li><strong>What context did Claude Code have automatically that you had to provide by hand in the chat window?</strong> And what context did you have that Claude Code did not?</li>
+</ol>
+
+<div class="callout note">
+  <strong>Optional extensions (not required).</strong>
+  <ul>
+    <li>Pick the one bug you are least sure the AI fixed <em>correctly</em>, and write one more test that would catch a wrong fix.</li>
+    <li>
+      <strong>Let tools check first.</strong> In a fresh copy of the <strong>original</strong> code,
+      run <code>pip install mypy ruff</code>, then <code>ruff check --select S teamboard</code> and
+      <code>mypy --check-untyped-defs teamboard</code>. Which of the five bugs does each tool find?
+      Which does neither find? Then run <code>mypy teamboard</code> without the option and compare.
+    </li>
+  </ul>
+</div>
+
+<h2>Submission Checklist</h2>
+<ul>
+  <li>Header: name, student ID, team number, Part 1 chat tool and model, Claude Code model</li>
+  <li>Bug report with one row for each of the five bugs (attempted is enough), including the bug that had no test</li>
+  <li>Loop tables for Part 1 and Part 2, one row per fix</li>
+  <li>At least three chat log entries from Part 1, each with your note, including at least one marked <strong>CHECKED DIAGNOSIS</strong></li>
+  <li>Your Claude Code notes, including at least one thing you declined, edited or questioned (or a sentence saying you approved everything and why)</li>
+  <li>Part 3: your test, red output, fix, green output, whole-suite result, the undo check, and &ldquo;bug or decision&rdquo;</li>
+  <li>Answers to the three comparison questions</li>
+  <li>No passwords or keys anywhere</li>
+  <li>Saved as one PDF named <code>Week11_Lab_&lt;student ID&gt;.pdf</code></li>
+</ul>
+<div class="callout warning">
+  Upload it on E3 under &ldquo;<a href="https://e3p.nycu.edu.tw/mod/assign/view.php?id=254075">Week 11 Lab</a>&rdquo; by <strong>Wednesday, November 18 (23:59)</strong>.
+</div>
+
+<h2>If Things Go Wrong</h2>
+<div class="table-scroll">
+<table class="grading-table">
+  <thead>
+    <tr><th>Problem</th><th>What to do</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>python -m unittest</code> says no tests were found, or <code>No module named 'teamboard'</code></td><td>You are not in the project folder. <code>cd</code> into <code>teamboard_chat</code> (or <code>teamboard_cc</code>), the folder that contains the <code>teamboard</code> and <code>tests</code> folders</td></tr>
+    <tr><td>The chat says you have reached a usage limit</td><td>Tell a TA and write down when it happened. You can continue Part 1 by reading the code and the test output yourself</td></tr>
+    <tr><td>The chat's answer stops in the middle</td><td>Ask it to continue, or ask about one function at a time</td></tr>
+    <tr><td>The model's code does not run, or mixes up the files</td><td>You probably pasted too little context. Paste the whole file the error points to, and say which function is wrong</td></tr>
+    <tr><td>The model keeps suggesting the same fix</td><td>Tell it what happened when you applied the fix (paste the new output). Do not just say &ldquo;that did not work&rdquo;</td></tr>
+    <tr><td>Claude Code asks you to log in</td><td>Sign in with the account in the setup guide. If it asks about using an API key, choose not to</td></tr>
+    <tr><td>Claude Code is slow, or says a usage limit was reached</td><td>Tell a TA. Write down what happened; it is part of the comparison</td></tr>
+    <tr><td>Claude Code made a mess</td><td><code>git checkout .</code> in <code>teamboard_cc</code> returns the files to the original commit. Say in your notes what you restored</td></tr>
+    <tr><td>Claude Code will not install on your computer</td><td>Tell a TA. You can still do Part 1; ask a neighbour if you can watch their Part 2 and write your answers from what you saw, saying so</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Connection to the Course</h2>
+<ul>
+  <li><strong>Week 7:</strong> you gave a model tools and saw it route calls. Claude Code is that idea with a large set of tools (read, edit, run) around a model, and a loop that keeps going until it decides it is done</li>
+  <li><strong>Week 10:</strong> a test suite is how you judge a prompt. Here the tests are a program that runs the code, and you see how an AI uses them (and whether it tries to change them)</li>
+  <li><strong>Today's lecture:</strong> specify before generating, the four lenses for evaluating AI code, debugging like a scientist (Part 1's checked diagnosis), &ldquo;no trace? write a test first&rdquo; (Part 3), and letting tools check first (the optional extension)</li>
+  <li><strong>Your project:</strong> merge day and CP2 are this week and next. The habits you practise here (read the diff, run the tests yourself, write down why) are what the collaboration evidence asks for</li>
+  <li><strong>Week 12:</strong> you will review another team's code. Use the four lenses from today</li>
+</ul>
+
+<p><a href="/calendar/">&larr; Back to Calendar</a></p>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>CSIC30216 &middot; AI-in-the-Loop in Software Project Cycle &middot; Fall 2026</span>
+      <span>National Yang Ming Chiao Tung University</span>
+    </div>
+  </footer>
+
+  <script>
+    const btn  = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open);
+    });
+    // Close menu on link click
+    menu.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', false);
+      })
+    );
+  </script>
+
+</body>
+</html>

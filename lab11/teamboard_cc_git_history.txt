@@ -1,0 +1,421 @@
+commit b242e03 Part 3 fix: blank assignee counts as Unassigned
+---
+ teamboard/report.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/teamboard/report.py b/teamboard/report.py
+index 80915a2..7cc2e19 100644
+--- a/teamboard/report.py
++++ b/teamboard/report.py
+@@ -10,7 +10,7 @@ def workload_summary(tasks):
+     for task in tasks:
+         if task["done"]:
+             continue
+-        name = (task["assignee"] or "Unassigned").strip().title()
++        name = (task["assignee"] or "").strip().title() or "Unassigned"
+         counts[name] = counts.get(name, 0) + 1
+     return counts
+ 
+commit 5e5f87c Add failing test
+---
+ tests/test_teamboard.py | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tests/test_teamboard.py b/tests/test_teamboard.py
+index 92b2e30..e0362b8 100644
+--- a/tests/test_teamboard.py
++++ b/tests/test_teamboard.py
+@@ -67,6 +67,13 @@ class ReportTests(unittest.TestCase):
+         summary = report.workload_summary(db.all_tasks(conn))
+         self.assertEqual(summary["Unassigned"], 1)
+ 
++    def test_workload_treats_blank_assignee_as_unassigned(self):
++        conn = make_db()
++        db.add_task(conn, "Blank owner", "   ", "2026-11-22")
++        summary = report.workload_summary(db.all_tasks(conn))
++        self.assertEqual(summary.get("Unassigned"), 1)
++        self.assertNotIn("", summary)
++
+     def test_timed_report_ends_with_timing_line(self):
+         text = report.timed_report(db.all_tasks(make_db()))
+         self.assertTrue(text.splitlines()[-1].startswith("(report built in"))
+commit fc7d4db Part 2 fixes
+---
+ teamboard/db.py         | 4 ++--
+ teamboard/report.py     | 6 +++---
+ teamboard/tasks.py      | 6 +++---
+ tests/test_teamboard.py | 7 +++++++
+ 4 files changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/teamboard/db.py b/teamboard/db.py
+index 45e7e7d..5430fe4 100644
+--- a/teamboard/db.py
++++ b/teamboard/db.py
+@@ -42,5 +42,5 @@ def all_tasks(conn):
+ 
+ def find_by_assignee(conn, name):
+     """Return all tasks assigned to `name`, soonest due date first."""
+-    query = f"SELECT * FROM tasks WHERE assignee = '{name}' ORDER BY due, id"
+-    return [dict(r) for r in conn.execute(query)]
++    query = "SELECT * FROM tasks WHERE assignee = ? ORDER BY due, id"
++    return [dict(r) for r in conn.execute(query, (name,))]
+diff --git a/teamboard/report.py b/teamboard/report.py
+index 2f8618d..80915a2 100644
+--- a/teamboard/report.py
++++ b/teamboard/report.py
+@@ -10,16 +10,16 @@ def workload_summary(tasks):
+     for task in tasks:
+         if task["done"]:
+             continue
+-        name = task["assignee"].strip().title()
++        name = (task["assignee"] or "Unassigned").strip().title()
+         counts[name] = counts.get(name, 0) + 1
+     return counts
+ 
+ 
+ def timed_report(tasks):
+     """Return the workload report followed by a line saying how long it took to build."""
+-    start = time.clock()
++    start = time.perf_counter()
+     summary = workload_summary(tasks)
+-    elapsed = time.clock() - start
++    elapsed = time.perf_counter() - start
+     lines = [f"{name}: {count} open" for name, count in sorted(summary.items())]
+     lines.append(f"(report built in {elapsed * 1000:.2f} ms)")
+     return "\n".join(lines)
+diff --git a/teamboard/tasks.py b/teamboard/tasks.py
+index 8ce9940..800f0f4 100644
+--- a/teamboard/tasks.py
++++ b/teamboard/tasks.py
+@@ -18,7 +18,7 @@ def due_within(tasks, today, days):
+         if task["done"]:
+             continue
+         delta = (parse_due(task["due"]) - today).days
+-        if 0 <= delta < days:
++        if 0 <= delta <= days:
+             result.append(task)
+     return result
+ 
+@@ -28,7 +28,7 @@ def find_duplicate_titles(tasks):
+ 
+     Each duplicated title is returned once, in lower case, in the order it first repeats.
+     """
+-    seen = []
++    seen = set()
+     duplicates = []
+     for task in tasks:
+         title = task["title"].strip().lower()
+@@ -36,5 +36,5 @@ def find_duplicate_titles(tasks):
+             if title not in duplicates:
+                 duplicates.append(title)
+         else:
+-            seen.append(title)
++            seen.add(title)
+     return duplicates
+diff --git a/tests/test_teamboard.py b/tests/test_teamboard.py
+index 4d2f174..92b2e30 100644
+--- a/tests/test_teamboard.py
++++ b/tests/test_teamboard.py
+@@ -30,6 +30,13 @@ class StorageTests(unittest.TestCase):
+         mine = db.find_by_assignee(conn, "ann lee")
+         self.assertEqual([t["title"] for t in mine], ["Write report", "Prepare demo"])
+ 
++    def test_find_by_assignee_is_safe_against_sql_injection(self):
++        conn = make_db()
++        db.add_task(conn, "Quote task", "Pat O'Brien", "2026-11-22")
++        self.assertEqual(db.find_by_assignee(conn, "x' OR '1'='1"), [])
++        found = db.find_by_assignee(conn, "Pat O'Brien")
++        self.assertEqual([t["title"] for t in found], ["Quote task"])
++
+ 
+ class DueDateTests(unittest.TestCase):
+     TODAY = date(2026, 11, 18)
+commit 0ea2d85 original unfixed code
+---
+ .DS_Store               | Bin 0 -> 6148 bytes
+ teamboard/__init__.py   |   1 +
+ teamboard/cli.py        |  31 ++++++++++++++++++
+ teamboard/db.py         |  46 +++++++++++++++++++++++++++
+ teamboard/report.py     |  33 +++++++++++++++++++
+ teamboard/tasks.py      |  40 +++++++++++++++++++++++
+ tests/__init__.py       |   0
+ tests/test_teamboard.py |  83 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 234 insertions(+)
+
+diff --git a/.DS_Store b/.DS_Store
+new file mode 100644
+index 0000000..a3ed5dc
+Binary files /dev/null and b/.DS_Store differ
+diff --git a/teamboard/__init__.py b/teamboard/__init__.py
+new file mode 100644
+index 0000000..1c1d29b
+--- /dev/null
++++ b/teamboard/__init__.py
+@@ -0,0 +1 @@
++"""TeamBoard: a tiny task tracker for student project teams."""
+diff --git a/teamboard/cli.py b/teamboard/cli.py
+new file mode 100644
+index 0000000..4893540
+--- /dev/null
++++ b/teamboard/cli.py
+@@ -0,0 +1,31 @@
++"""Demo driver: python -m teamboard.cli"""
++from datetime import date
++
++from teamboard import db, report, tasks
++
++
++def seed(conn):
++    db.add_task(conn, "Write DECISIONS.md entry", "ann lee", "2026-11-18")
++    db.add_task(conn, "Fix login bug", "ben chu", "2026-11-19")
++    db.add_task(conn, "Prepare user test script", "ann lee", "2026-11-21")
++    db.add_task(conn, "Draft design rationale", None, "2026-11-22")
++    db.add_task(conn, "Merge day plan", "cara wu", "2026-11-20")
++
++
++def main():
++    conn = db.connect()
++    seed(conn)
++    today = date(2026, 11, 18)
++    print("== Due in the next 3 days ==")
++    print(report.due_soon_report(db.all_tasks(conn), today, 3))
++    print("\n== Ann's tasks ==")
++    for t in db.find_by_assignee(conn, "ann lee"):
++        print(" ", t["title"])
++    print("\n== Duplicates ==")
++    print(tasks.find_duplicate_titles(db.all_tasks(conn)) or "none")
++    print("\n== Workload ==")
++    print(report.timed_report(db.all_tasks(conn)))
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/teamboard/db.py b/teamboard/db.py
+new file mode 100644
+index 0000000..45e7e7d
+--- /dev/null
++++ b/teamboard/db.py
+@@ -0,0 +1,46 @@
++"""SQLite storage for TeamBoard tasks."""
++import sqlite3
++
++
++def connect(path=":memory:"):
++    """Open a database and make sure the tasks table exists."""
++    conn = sqlite3.connect(path)
++    conn.row_factory = sqlite3.Row
++    conn.execute(
++        """CREATE TABLE IF NOT EXISTS tasks (
++               id       INTEGER PRIMARY KEY AUTOINCREMENT,
++               title    TEXT NOT NULL,
++               assignee TEXT,
++               due      TEXT NOT NULL,
++               done     INTEGER NOT NULL DEFAULT 0
++           )"""
++    )
++    return conn
++
++
++def add_task(conn, title, assignee, due):
++    """Insert a task. `due` is an ISO date string such as '2026-11-23'. Returns the new id."""
++    cur = conn.execute(
++        "INSERT INTO tasks (title, assignee, due) VALUES (?, ?, ?)",
++        (title, assignee, due),
++    )
++    conn.commit()
++    return cur.lastrowid
++
++
++def mark_done(conn, task_id):
++    """Mark one task as done."""
++    conn.execute("UPDATE tasks SET done = 1 WHERE id = ?", (task_id,))
++    conn.commit()
++
++
++def all_tasks(conn):
++    """Return every task as a dict, soonest due date first."""
++    rows = conn.execute("SELECT * FROM tasks ORDER BY due, id")
++    return [dict(r) for r in rows]
++
++
++def find_by_assignee(conn, name):
++    """Return all tasks assigned to `name`, soonest due date first."""
++    query = f"SELECT * FROM tasks WHERE assignee = '{name}' ORDER BY due, id"
++    return [dict(r) for r in conn.execute(query)]
+diff --git a/teamboard/report.py b/teamboard/report.py
+new file mode 100644
+index 0000000..2f8618d
+--- /dev/null
++++ b/teamboard/report.py
+@@ -0,0 +1,33 @@
++"""Plain-text reports for the team."""
++import time
++
++from teamboard.tasks import due_within
++
++
++def workload_summary(tasks):
++    """Count open tasks per person. Tasks with no assignee are counted under 'Unassigned'."""
++    counts = {}
++    for task in tasks:
++        if task["done"]:
++            continue
++        name = task["assignee"].strip().title()
++        counts[name] = counts.get(name, 0) + 1
++    return counts
++
++
++def timed_report(tasks):
++    """Return the workload report followed by a line saying how long it took to build."""
++    start = time.clock()
++    summary = workload_summary(tasks)
++    elapsed = time.clock() - start
++    lines = [f"{name}: {count} open" for name, count in sorted(summary.items())]
++    lines.append(f"(report built in {elapsed * 1000:.2f} ms)")
++    return "\n".join(lines)
++
++
++def due_soon_report(tasks, today, days=3):
++    """List the open tasks due within `days` days."""
++    soon = due_within(tasks, today, days)
++    if not soon:
++        return "Nothing due soon."
++    return "\n".join(f"{t['due']}  {t['title']} ({t['assignee'] or 'unassigned'})" for t in soon)
+diff --git a/teamboard/tasks.py b/teamboard/tasks.py
+new file mode 100644
+index 0000000..8ce9940
+--- /dev/null
++++ b/teamboard/tasks.py
+@@ -0,0 +1,40 @@
++"""Pure functions that work on lists of task dicts (as returned by db.all_tasks)."""
++from datetime import date
++
++
++def parse_due(text):
++    """Turn '2026-11-23' into a date."""
++    return date.fromisoformat(text)
++
++
++def due_within(tasks, today, days):
++    """Return the open tasks due from `today` up to and including `days` days from today.
++
++    Example: with days=3, a task due exactly 3 days from today IS included.
++    Finished tasks and tasks already overdue are not included.
++    """
++    result = []
++    for task in tasks:
++        if task["done"]:
++            continue
++        delta = (parse_due(task["due"]) - today).days
++        if 0 <= delta < days:
++            result.append(task)
++    return result
++
++
++def find_duplicate_titles(tasks):
++    """Return the titles that appear more than once, ignoring case and spaces.
++
++    Each duplicated title is returned once, in lower case, in the order it first repeats.
++    """
++    seen = []
++    duplicates = []
++    for task in tasks:
++        title = task["title"].strip().lower()
++        if title in seen:
++            if title not in duplicates:
++                duplicates.append(title)
++        else:
++            seen.append(title)
++    return duplicates
+diff --git a/tests/__init__.py b/tests/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/tests/test_teamboard.py b/tests/test_teamboard.py
+new file mode 100644
+index 0000000..4d2f174
+--- /dev/null
++++ b/tests/test_teamboard.py
+@@ -0,0 +1,83 @@
++import time
++import unittest
++from datetime import date
++
++from teamboard import db, report, tasks
++
++
++def make_db():
++    conn = db.connect()
++    db.add_task(conn, "Write report", "ann lee", "2026-11-20")
++    db.add_task(conn, "Fix login bug", "ben chu", "2026-11-19")
++    db.add_task(conn, "Prepare demo", "ann lee", "2026-11-25")
++    return conn
++
++
++class StorageTests(unittest.TestCase):
++    def test_add_and_list_tasks(self):
++        conn = make_db()
++        titles = [t["title"] for t in db.all_tasks(conn)]
++        self.assertEqual(titles, ["Fix login bug", "Write report", "Prepare demo"])
++
++    def test_mark_done(self):
++        conn = make_db()
++        first = db.all_tasks(conn)[0]
++        db.mark_done(conn, first["id"])
++        self.assertEqual(db.all_tasks(conn)[0]["done"], 1)
++
++    def test_find_by_assignee_returns_that_persons_tasks(self):
++        conn = make_db()
++        mine = db.find_by_assignee(conn, "ann lee")
++        self.assertEqual([t["title"] for t in mine], ["Write report", "Prepare demo"])
++
++
++class DueDateTests(unittest.TestCase):
++    TODAY = date(2026, 11, 18)
++
++    def test_due_within_includes_the_last_day(self):
++        conn = make_db()
++        db.add_task(conn, "Boundary task", "cara wu", "2026-11-21")  # exactly 3 days away
++        soon = tasks.due_within(db.all_tasks(conn), self.TODAY, 3)
++        self.assertIn("Boundary task", [t["title"] for t in soon])
++
++    def test_due_within_skips_done_and_past(self):
++        conn = make_db()
++        db.add_task(conn, "Old task", "cara wu", "2026-11-10")
++        done_id = db.add_task(conn, "Finished task", "cara wu", "2026-11-19")
++        db.mark_done(conn, done_id)
++        titles = [t["title"] for t in tasks.due_within(db.all_tasks(conn), self.TODAY, 3)]
++        self.assertEqual(titles, ["Fix login bug", "Write report"])
++
++
++class ReportTests(unittest.TestCase):
++    def test_workload_counts_open_tasks(self):
++        summary = report.workload_summary(db.all_tasks(make_db()))
++        self.assertEqual(summary, {"Ann Lee": 2, "Ben Chu": 1})
++
++    def test_workload_counts_unassigned_tasks(self):
++        conn = make_db()
++        db.add_task(conn, "Nobody owns this", None, "2026-11-22")
++        summary = report.workload_summary(db.all_tasks(conn))
++        self.assertEqual(summary["Unassigned"], 1)
++
++    def test_timed_report_ends_with_timing_line(self):
++        text = report.timed_report(db.all_tasks(make_db()))
++        self.assertTrue(text.splitlines()[-1].startswith("(report built in"))
++
++
++class DuplicateTests(unittest.TestCase):
++    def test_duplicates_found_ignoring_case_and_spaces(self):
++        items = [{"title": t} for t in ["Fix bug", " fix BUG ", "Write docs", "Fix bug"]]
++        self.assertEqual(tasks.find_duplicate_titles(items), ["fix bug"])
++
++    def test_duplicates_fast_on_large_input(self):
++        items = [{"title": f"Task number {i}"} for i in range(20_000)]
++        start = time.perf_counter()
++        result = tasks.find_duplicate_titles(items)
++        elapsed = time.perf_counter() - start
++        self.assertEqual(result, [])
++        self.assertLess(elapsed, 0.5, f"took {elapsed:.2f}s for 20,000 titles")
++
++
++if __name__ == "__main__":
++    unittest.main()
